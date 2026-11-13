@@ -1,0 +1,2883 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!-- Кодировка и адаптация под экран -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#142234">
+
+  <title>SOSISKA OFFICE STUDIO</title>
+
+  <!-- Основной файл оформления -->
+  <style>
+
+:root {
+  font-family: Arial, "Segoe UI", sans-serif;
+  color: #eef5fc;
+  background: #101b29;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  color: #edf4fc;
+  background: #273d54;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 13px;
+}
+
+button:hover {
+  background: #36536e;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.primary {
+  background: #d7a85c;
+  color: #182435;
+  border-color: #edc47d;
+  font-weight: bold;
+}
+
+.primary:hover {
+  background: #e9bd75;
+}
+
+.topbar {
+  height: 60px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #162639;
+  border-bottom: 1px solid #3b526b;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.brand-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: #d9aa61;
+  color: #172437;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.brand small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #91a7bc;
+}
+
+.stats {
+  display: flex;
+  gap: 17px;
+  font-size: 12px;
+  color: #b1c3d4;
+}
+
+#viewport {
+  height: calc(100% - 126px);
+  position: relative;
+  overflow: hidden;
+  background: #b5c6d8;
+}
+
+#scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.scene-help {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  padding: 9px 12px;
+  border-radius: 9px;
+  background: #142437dd;
+  border: 1px solid #45607c;
+  color: #d7e4f0;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.toolbar {
+  height: 66px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  overflow-x: auto;
+  background: #162639;
+  border-top: 1px solid #3b526b;
+}
+
+.toolbar button {
+  white-space: nowrap;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 15px;
+  background: #09131fd9;
+  z-index: 10;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.start-card, .dialog {
+  width: min(560px, 100%);
+  background: #1a2c40;
+  border: 0;
+  border-radius: 15px;
+  box-shadow: none;
+}
+
+.start-card {
+  padding: 30px;
+  text-align: center;
+}
+
+.start-card h1 {
+  margin: 12px 0;
+  font-size: 29px;
+}
+
+.start-card p {
+  color: #b2c5d7;
+  line-height: 1.55;
+}
+
+.eyebrow {
+  color: #e2b66f;
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+
+.model-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.model-status > div {
+  padding: 14px;
+  text-align: left;
+  border-radius: 9px;
+  background: #263d55;
+  border: 1px solid #435d77;
+}
+
+.model-status strong,
+.model-status small {
+  display: block;
+}
+
+.model-status small {
+  margin-top: 6px;
+  color: #9eb4ca;
+  font-size: 11px;
+}
+
+#loadingText {
+  color: #b8cce0;
+  font-size: 12px;
+  margin: 12px 0;
+}
+
+.progress {
+  height: 5px;
+  background: #0e1c2c;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 17px;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0;
+  background: #dfb16b;
+  transition: width .25s;
+}
+
+.wide {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  margin: 9px 0;
+}
+
+.dialog {
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dialog-head {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #435b74;
+}
+
+.dialog-head h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.dialog-head button {
+  font-size: 22px;
+}
+
+#modalBody {
+  overflow-y: auto;
+  padding: 18px;
+}
+
+.field {
+  margin: 11px 0;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #b2c7da;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  border: 1px solid #506b85;
+  background: #102033;
+  color: white;
+}
+
+.field textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin: 16px 0;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 7px;
+  min-height: 78px;
+  padding: 12px;
+  text-align: left;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: white;
+}
+
+.tile strong {
+  font-size: 14px;
+}
+
+.tile small {
+  color: #d0deeb;
+  font-size: 11px;
+}
+
+.tile-blue {
+  --background: #204867;
+  --border: #4b94c6;
+}
+
+.tile-gold {
+  --background: #655032;
+  --border: #e0ad60;
+}
+
+.tile-green {
+  --background: #205347;
+  --border: #48a58d;
+}
+
+.tile-purple {
+  --background: #493960;
+  --border: #a187d2;
+}
+
+.tile-red {
+  --background: #643541;
+  --border: #cb7888;
+}
+
+.tile-slate {
+  --background: #354a5e;
+  --border: #8296aa;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #425c75;
+  border-radius: 9px;
+  background: #263a50;
+}
+
+.item small {
+  display: block;
+  margin-top: 5px;
+  color: #adc1d5;
+}
+
+.muted {
+  font-size: 12px;
+  color: #adbed0;
+}
+
+#toast {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 15px;
+  border-radius: 9px;
+  background: #132439;
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+#toast.show {
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .topbar { height: 54px; }
+  .stats { display: none; }
+  .toolbar { justify-content: flex-start; }
+  #viewport { height: calc(100% - 120px); }
+  .start-card { padding: 20px; }
+  .start-card h1 { font-size: 24px; }
+  .model-status { grid-template-columns: 1fr; }
+  .scene-help { font-size: 10px; }
+}
+
+</style>
+<style>
+/* Интегрированное графическое меню, без изменения исходной 3D-сцены */
+#officeImageMenu{position:absolute;left:9px;top:12px;z-index:5;width:116px;padding:4px;border-radius:9px;background:#152538df;border:0;backdrop-filter:blur(7px)}
+#officeImageTiles{display:flex;flex-direction:column;gap:3px}
+.office-image-tile{display:block;width:100%;height:32px;padding:0;border:0;border-radius:5px;overflow:hidden;background:linear-gradient(110deg,#0c3757,#2879b4 35%,#d5e4ef);outline:0;position:relative}
+.office-image-tile img{display:block;width:100%;height:100%;object-fit:fill}
+.office-image-tile span{position:absolute;inset:0;display:grid;place-items:center;font-size:19px;color:#fff}
+.office-image-tile:hover,.office-image-tile.active{outline:0;filter:brightness(1.13)}
+.image-menu-tools{display:flex;align-items:center;gap:3px;margin-top:6px}.image-menu-tools button{padding:2px 5px;font-size:13px;border-radius:5px}.image-menu-tools label{min-width:0;flex:1}.image-menu-tools input{width:100%;accent-color:#dfb16b}
+.image-info-panel{position:absolute;z-index:6;left:136px;top:12px;width:min(340px,calc(100% - 145px));max-height:75%;overflow:auto;border:0;border-radius:11px;background:#1b2d41f5;box-shadow:none;padding:12px;color:#edf4fc}
+.image-info-panel[hidden]{display:none}.image-info-panel header{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #435b74;padding-bottom:7px}.image-info-panel header button{padding:3px 9px}.image-info-panel p{font-size:13px;line-height:1.55;color:#b7cde0}.image-info-panel .panel-actions{display:flex;gap:6px;flex-wrap:wrap}.image-info-panel .panel-actions button{font-size:12px;padding:7px}
+#integratedLoader{position:fixed;inset:0;z-index:100;background:#111a26 url('Переезд офиса на закате.png') center/cover no-repeat;display:flex;align-items:flex-end;justify-content:center;padding:25px;transition:opacity .45s,visibility .45s}
+#integratedLoader:before{content:'';position:absolute;inset:0;background:linear-gradient(transparent 35%,#08101ce0)}#integratedLoader.finished{opacity:0;visibility:hidden;pointer-events:none}
+.integrated-load-card{position:relative;width:min(740px,100%);padding:20px;border-radius:15px;background:#122034dc;border:0;backdrop-filter:blur(10px)}
+#integratedLoadTitle{font-size:21px;font-weight:700;margin-bottom:13px}.integrated-load-track{height:16px;border:1px solid #60778b;background:#101b2b;border-radius:12px;overflow:hidden}#integratedLoadFill{height:100%;width:0;background:linear-gradient(90deg,#e98a22,#ffcb55);transition:width .2s}.integrated-load-foot{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:12px;color:#b9cce0}
+@media(max-width:650px){#officeImageMenu{width:85px;left:5px;top:7px}.office-image-tile{height:27px}.image-info-panel{left:99px;width:calc(100% - 107px)}.scene-help{left:95px;max-width:calc(100% - 105px)}}
+
+/* Эмоции: экранный размер фиксирован при любом зуме камеры */
+#emotionLayer{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.emotion-bubble{position:absolute;width:48px;height:48px;transform:translate(-50%,-100%);padding:0;border:0;background:transparent;box-shadow:none;cursor:pointer;pointer-events:auto;touch-action:manipulation}
+.emotion-bubble img{display:block;width:100%;height:100%;object-fit:contain;filter:none}
+.emotion-bubble:focus-visible{outline:2px solid #e6b65f;outline-offset:2px}
+@media(max-width:650px){.emotion-bubble{width:40px;height:40px}.toolbar{justify-content:flex-start;gap:3px}.toolbar button{padding:8px 9px;font-size:11px}.topbar{padding:0 8px}.brand small{display:none}}
+
+/* ==============================================================
+   UI / BROWSER RESET — плитки, изображения и игровой холст
+   Убирает синюю подсветку мышью, системное выделение и drag ghost.
+   Для навигации клавиатурой оставлен неброский золотой focus-visible.
+   НЕ применяется к полям ввода и тексту информационных панелей.
+   ============================================================== */
+#officeImageMenu, #officeImageTiles, .office-image-tile,
+.office-image-tile img, #emotionLayer, .emotion-bubble,
+.emotion-bubble img, #scene, .toolbar button {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.office-image-tile, .emotion-bubble, .toolbar button, #scene {
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.office-image-tile:focus:not(:focus-visible),
+.emotion-bubble:focus:not(:focus-visible),
+.toolbar button:focus:not(:focus-visible) { outline: none; box-shadow: none; }
+.office-image-tile:focus-visible, .emotion-bubble:focus-visible,
+.toolbar button:focus-visible { outline: 1px solid #d7a85c; outline-offset: 1px; }
+.office-image-tile img, .emotion-bubble img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+#scene { touch-action: none; }
+
+</style></head>
+
+<body>
+
+<!-- Реальный загрузочный экран: закрывается после инициализации Three.js и GLB -->
+<div id="integratedLoader" role="status" aria-live="polite"><div class="integrated-load-card"><div id="integratedLoadTitle">Подготовка офиса...</div><div class="integrated-load-track"><div id="integratedLoadFill"></div></div><div class="integrated-load-foot"><span id="integratedLoadDetail">Загрузка движка и сцены</span><span id="integratedLoadPercent">0%</span></div><button id="integratedRetry" hidden>Повторить загрузку</button></div></div>
+
+<div id="app">
+
+  <!-- ========================================
+       ВЕРХНЯЯ ПАНЕЛЬ ИГРЫ
+       ======================================== -->
+  <header class="topbar">
+
+    <!-- Логотип и название -->
+    <div class="brand">
+      <span class="brand-icon">S</span>
+
+      <div>
+        <strong>SOSISKA OFFICE</strong>
+        <small>3D OFFICE STUDIO / V3</small>
+      </div>
+    </div>
+
+    <!-- Статистика сотрудников и заданий -->
+    <div class="stats">
+      <span id="employeeCount">Сотрудники: 0</span>
+      <span id="taskCount">Задания: 0</span>
+      <span id="saveStatus">Не сохранено</span>
+    </div>
+
+    <!-- Полноэкранный режим -->
+    <button id="fullscreen" title="Полный экран">⛶</button>
+  </header>
+
+  <!-- ========================================
+       ОСНОВНАЯ 3D-СЦЕНА
+       ======================================== -->
+  <main id="viewport">
+
+    <!-- Three.js выводит сюда 3D-изображение -->
+    <canvas id="scene"></canvas>
+    <!-- Иконки эмоций размещаются в отдельном HTML-слое поверх 3D -->
+    <div id="emotionLayer"></div>
+<!-- Единый компактный блок графических кнопок поверх сцены -->
+<aside id="officeImageMenu" aria-label="Графическое меню офиса"><div id="officeImageTiles"></div><div class="image-menu-tools"><button id="imageMenuUpload" title="Загрузить PNG">＋</button><button id="menuSoundToggle" title="Включить или отключить звук">♫</button><label title="Громкость"><input id="menuVolume" type="range" min="0" max="100" value="65"></label></div><input id="imageMenuFiles" type="file" accept="image/*" multiple hidden><input id="menuSoundFile" type="file" accept="audio/*,.wav" hidden></aside>
+<section id="imageInfoPanel" class="image-info-panel" hidden><header><strong id="imageInfoTitle"></strong><button id="imageInfoClose" aria-label="Закрыть">×</button></header><div id="imageInfoBody"></div></section>
+
+
+    <!-- Подсказки по управлению -->
+    <div class="scene-help">
+      ЛКМ — выбрать или направить сотрудника ·
+      ПКМ по сосиске — настройки ·
+      Перетаскивание — вращение ·
+      Shift + ЛКМ — панорама ·
+      Колесо — масштаб · WASD — движение
+    </div>
+
+    <!-- Всплывающие уведомления -->
+    <div id="toast" role="status"></div>
+  </main>
+
+  <!-- ========================================
+       НИЖНЯЯ ПАНЕЛЬ УПРАВЛЕНИЯ
+       ======================================== -->
+  <nav class="toolbar">
+
+    <button data-action="home">
+      Главная
+    </button>
+
+    <button data-action="staff">
+      Сотрудники
+    </button>
+
+    <button data-action="add">
+      + Сотрудник
+    </button>
+
+    <button data-action="tasks">
+      Задания
+    </button>
+
+    <button data-action="camera">
+      Камера
+    </button>
+
+    <button data-action="settings">
+      Настройки
+    </button>
+
+    <button data-action="save" class="primary">
+      Сохранить
+    </button>
+  </nav>
+
+  <!-- ========================================
+       СТАРТОВЫЙ ЭКРАН
+       ======================================== -->
+  <section id="start" class="overlay hidden">
+
+    <div class="start-card">
+
+      <div class="eyebrow">
+        OFFICE SIMULATION
+      </div>
+
+      <h1>СОСИСКА — ОФИС</h1>
+
+      <p>
+        Управление сотрудниками, заданиями,
+        эмоциями и трёхмерным офисом.
+      </p>
+
+      <!-- ====================================
+           СОСТОЯНИЕ ЗАГРУЗКИ 3D-МОДЕЛЕЙ
+           ==================================== -->
+      <div class="model-status">
+
+        <!-- Модель помещения -->
+        <div>
+          <strong>Офис</strong>
+
+          <!-- Путь относительно index.html -->
+          <small>models/office.glb</small>
+
+          <!-- Статус обновляется через main.js -->
+          <small data-model="office">
+            Ожидание загрузки
+          </small>
+        </div>
+
+        <!-- Модель персонажа -->
+        <div>
+          <strong>Персонаж</strong>
+
+          <!-- Путь относительно index.html -->
+          <small>models/sosiska.glb</small>
+
+          <!-- Статус обновляется через main.js -->
+          <small data-model="person">
+            Ожидание загрузки
+          </small>
+        </div>
+
+      </div>
+
+      <!-- Текст текущего этапа загрузки -->
+      <div id="loadingText">
+        Автоматическая загрузка моделей из папки проекта...
+      </div>
+
+      <!-- Индикатор прогресса загрузки -->
+      <div class="progress">
+        <div id="progressBar"></div>
+      </div>
+
+      <!-- Создание новой игры -->
+      <button id="newGame" class="primary wide">
+        Начать новую игру
+      </button>
+
+      <!-- Восстановление сохранённой игры -->
+      <button id="continueGame" class="wide">
+        Продолжить сохранение
+      </button>
+
+      <!-- Сообщение о резервных моделях -->
+      <p class="muted">
+        Если GLB-файлы отсутствуют, игра создаст
+        демонстрационный офис и персонажей.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ========================================
+       УНИВЕРСАЛЬНОЕ МОДАЛЬНОЕ ОКНО
+       ======================================== -->
+  <section id="modal" class="overlay hidden">
+
+    <div class="dialog">
+
+      <!-- Заголовок окна -->
+      <div class="dialog-head">
+
+        <h2 id="modalTitle">
+          Настройки
+        </h2>
+
+        <!-- Закрытие окна -->
+        <button id="closeModal">×</button>
+
+      </div>
+
+      <!-- Содержимое создаётся через main.js -->
+      <div id="modalBody"></div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- ==========================================
+     ПОДКЛЮЧЕНИЕ THREE.JS
+     ========================================== -->
+
+<!-- Карта импортов JavaScript-модулей -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/"
+  }
+}
+</script>
+
+<!-- ==========================================
+     ГЛАВНЫЙ JAVASCRIPT ФАЙЛ
+     ========================================== -->
+
+<!-- main.js подключает collision.js
+     и загружает модели из папки models -->
+<script type="module">
+
+
+
+
+// =================================================================
+// 01 / COLLISION + PATHFINDING — будущий collision.js
+// =================================================================
+class OfficeNavigation {
+  constructor() {
+    this.bounds = {
+      minX: -8.5, maxX: 8.5,
+      minZ: -6, maxZ: 6
+    };
+    this.obstacles = [];
+    this.radius = 0.32;
+    this.cell = 0.4;
+    this.debug = null;
+  }
+
+  addBox(x, z, width, depth, name = "Препятствие") {
+    this.obstacles.push({
+      minX: x - width / 2,
+      maxX: x + width / 2,
+      minZ: z - depth / 2,
+      maxZ: z + depth / 2,
+      name
+    });
+  }
+
+  build(root, demo = false) {
+    this.obstacles = [];
+
+    if (demo) {
+      this.bounds = {
+        minX: -8.55, maxX: 8.55,
+        minZ: -6.05, maxZ: 6.05
+      };
+
+      for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 3; col++) {
+          const x = -5.5 + col * 5.5;
+          const z = -2.8 + row * 5.2;
+
+          this.addBox(x, z, 2.9, 1.6, "Рабочий стол");
+          this.addBox(x, z + 1.2, 1.0, 0.9, "Кресло");
+        }
+      }
+
+      this.addBox(7.1, -4.6, 2.3, 0.85, "Шкаф");
+      return;
+    }
+
+    root.updateMatrixWorld(true);
+
+    const full = new THREE.Box3().setFromObject(root);
+    const size = full.getSize(new THREE.Vector3());
+
+    if (size.x > 2 && size.z > 2) {
+      this.bounds = {
+        minX: full.min.x + 0.4,
+        maxX: full.max.x - 0.4,
+        minZ: full.min.z + 0.4,
+        maxZ: full.max.z - 0.4
+      };
+    }
+
+    root.traverse(node => {
+      if (!node.isMesh) return;
+      if (node.userData.walkable === true) return;
+      if (node.userData.collision === false) return;
+
+      const name = node.name.toLowerCase();
+
+      if (/floor|ground|ceiling|roof|пол|потол|ковер|ковёр/.test(name)) {
+        return;
+      }
+
+      const box = new THREE.Box3().setFromObject(node);
+      const s = box.getSize(new THREE.Vector3());
+
+      if (box.max.y < 0.35 || box.min.y > 2.1) return;
+      if (s.y < 0.3) return;
+
+      const wall =
+        /wall|partition|pillar|стен|колон|перегород/.test(name);
+
+      const furniture =
+        /desk|table|chair|sofa|cabinet|shelf|plant|locker|стол|стул|диван|шкаф|полк|растен/.test(name);
+
+      const smallObject =
+        s.x < 4 && s.z < 4 &&
+        box.min.y < 1.5 && box.max.y > 0.4;
+
+      if (
+        !wall &&
+        !furniture &&
+        !smallObject &&
+        node.userData.collision !== true
+      ) return;
+
+      this.obstacles.push({
+        minX: box.min.x,
+        maxX: box.max.x,
+        minZ: box.min.z,
+        maxZ: box.max.z,
+        name: node.name
+      });
+    });
+  }
+
+  canStand(x, z, radius = this.radius) {
+    const b = this.bounds;
+
+    if (
+      x - radius < b.minX ||
+      x + radius > b.maxX ||
+      z - radius < b.minZ ||
+      z + radius > b.maxZ
+    ) return false;
+
+    for (const o of this.obstacles) {
+      const px = Math.max(o.minX, Math.min(x, o.maxX));
+      const pz = Math.max(o.minZ, Math.min(z, o.maxZ));
+
+      const dx = x - px;
+      const dz = z - pz;
+
+      if (dx * dx + dz * dz < radius * radius) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  move(from, dx, dz) {
+    const steps = Math.max(
+      1,
+      Math.ceil(Math.hypot(dx, dz) / 0.1)
+    );
+
+    let x = from.x;
+    let z = from.z;
+
+    for (let i = 0; i < steps; i++) {
+      const sx = dx / steps;
+      const sz = dz / steps;
+
+      if (this.canStand(x + sx, z + sz)) {
+        x += sx;
+        z += sz;
+      } else {
+        if (this.canStand(x + sx, z)) x += sx;
+        if (this.canStand(x, z + sz)) z += sz;
+      }
+    }
+
+    return new THREE.Vector3(x, 0, z);
+  }
+
+  nearestFree(x, z) {
+    if (this.canStand(x, z)) {
+      return new THREE.Vector3(x, 0, z);
+    }
+
+    for (let r = 0.25; r <= 8; r += 0.25) {
+      for (let i = 0; i < 32; i++) {
+        const angle = i * Math.PI / 16;
+        const px = x + Math.cos(angle) * r;
+        const pz = z + Math.sin(angle) * r;
+
+        if (this.canStand(px, pz)) {
+          return new THREE.Vector3(px, 0, pz);
+        }
+      }
+    }
+
+    return null;
+  }
+
+  path(start, target) {
+    const finish = this.nearestFree(target.x, target.z);
+    if (!finish) return null;
+
+    const b = this.bounds;
+    const cell = this.cell;
+
+    const cols = Math.ceil((b.maxX - b.minX) / cell) + 1;
+    const rows = Math.ceil((b.maxZ - b.minZ) / cell) + 1;
+
+    if (cols * rows > 80000) return null;
+
+    const grid = (x, z) => [
+      Math.max(0, Math.min(cols - 1,
+        Math.round((x - b.minX) / cell))),
+      Math.max(0, Math.min(rows - 1,
+        Math.round((z - b.minZ) / cell)))
+    ];
+
+    const world = (i, j) => new THREE.Vector3(
+      b.minX + i * cell,
+      0,
+      b.minZ + j * cell
+    );
+
+    const [si, sj] = grid(start.x, start.z);
+    const [ei, ej] = grid(finish.x, finish.z);
+
+    const key = (i, j) => `${i},${j}`;
+    const startKey = key(si, sj);
+    const endKey = key(ei, ej);
+
+    const open = [{ i: si, j: sj, f: 0 }];
+    const came = new Map();
+    const scores = new Map([[startKey, 0]]);
+    const closed = new Set();
+
+    const dirs = [
+      [1, 0], [-1, 0], [0, 1], [0, -1],
+      [1, 1], [1, -1], [-1, 1], [-1, -1]
+    ];
+
+    let found = false;
+    let iterations = 0;
+
+    while (open.length && iterations++ < 30000) {
+      open.sort((a, b) => a.f - b.f);
+
+      const current = open.shift();
+      const ck = key(current.i, current.j);
+
+      if (closed.has(ck)) continue;
+
+      if (ck === endKey) {
+        found = true;
+        break;
+      }
+
+      closed.add(ck);
+
+      for (const [di, dj] of dirs) {
+        const i = current.i + di;
+        const j = current.j + dj;
+
+        if (
+          i < 0 || j < 0 ||
+          i >= cols || j >= rows
+        ) continue;
+
+        const next = world(i, j);
+        const nk = key(i, j);
+
+        if (closed.has(nk)) continue;
+        if (!this.canStand(next.x, next.z)) continue;
+
+        if (di !== 0 && dj !== 0) {
+          const sideA = world(current.i + di, current.j);
+          const sideB = world(current.i, current.j + dj);
+
+          if (
+            !this.canStand(sideA.x, sideA.z) ||
+            !this.canStand(sideB.x, sideB.z)
+          ) continue;
+        }
+
+        const cost =
+          scores.get(ck) + Math.hypot(di, dj);
+
+        if (cost < (scores.get(nk) ?? Infinity)) {
+          came.set(nk, ck);
+          scores.set(nk, cost);
+
+          open.push({
+            i, j,
+            f: cost + Math.hypot(ei - i, ej - j)
+          });
+        }
+      }
+    }
+
+    if (!found) return null;
+
+    const points = [finish];
+    let current = endKey;
+
+    while (current !== startKey) {
+      const [i, j] = current.split(",").map(Number);
+      points.push(world(i, j));
+      current = came.get(current);
+
+      if (!current) return null;
+    }
+
+    points.reverse();
+
+    // Убираем лишние точки, но оставляем
+    // промежуточные точки обхода препятствий.
+    const result = [];
+    let index = 0;
+
+    while (index < points.length) {
+      let furthest = index + 1;
+
+      for (let j = points.length - 1; j > index; j--) {
+        if (this.lineClear(
+          index === 0 ? start : points[index],
+          points[j]
+        )) {
+          furthest = j;
+          break;
+        }
+      }
+
+      result.push(points[furthest] || finish);
+      index = furthest;
+
+      if (index >= points.length - 1) break;
+    }
+
+    return result;
+  }
+
+  lineClear(a, b) {
+    const distance = a.distanceTo(b);
+    const steps = Math.max(1, Math.ceil(distance / 0.1));
+
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const x = a.x + (b.x - a.x) * t;
+      const z = a.z + (b.z - a.z) * t;
+
+      if (!this.canStand(x, z)) return false;
+    }
+
+    return true;
+  }
+
+  toggleDebug(scene) {
+    if (this.debug) {
+      scene.remove(this.debug);
+      this.debug = null;
+      return false;
+    }
+
+    const group = new THREE.Group();
+
+    const material = new THREE.MeshBasicMaterial({
+      color: 0xffa43d,
+      transparent: true,
+      opacity: 0.28,
+      depthWrite: false
+    });
+
+    for (const o of this.obstacles) {
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(
+          Math.max(0.02, o.maxX - o.minX),
+          0.1,
+          Math.max(0.02, o.maxZ - o.minZ)
+        ),
+        material
+      );
+
+      mesh.position.set(
+        (o.minX + o.maxX) / 2,
+        0.12,
+        (o.minZ + o.maxZ) / 2
+      );
+
+      group.add(mesh);
+    }
+
+    scene.add(group);
+    this.debug = group;
+    return true;
+  }
+}
+
+
+// OfficeNavigation встроен ниже, отдельный collision.js не требуется.
+
+
+// =================================================================
+// 02 / GAME STATE + UTILITIES — будущий state.js
+// =================================================================
+const $ = id => document.getElementById(id);
+const STORAGE = "sosiska-office-v3";
+
+let THREE;
+let OrbitControls;
+let GLTFLoader;
+
+let scene;
+let renderer;
+let camera;
+let controls;
+let raycaster;
+let mouse;
+let clock;
+let loader;
+let navigation;
+let grid;
+
+let officeRoot = null;
+let personTemplate = null;
+let selected = null;
+
+let initialized = false;
+let initializing = null;
+let assetResults = { office: null, person: null };
+let running = false;
+let collisions = true;
+let funds = 500;
+
+const employees = [];
+const keys = new Set();
+
+let pointerDown = null;
+let toastTimer = null;
+
+function uid() {
+  return crypto.randomUUID?.() ||
+    String(Date.now() + Math.random());
+}
+
+function safe(value) {
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    c => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[c]
+  );
+}
+
+function toast(message) {
+  $("toast").textContent = message;
+  $("toast").classList.add("show");
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(
+    () => $("toast").classList.remove("show"),
+    2500
+  );
+}
+
+function progress(value, text) {
+  window.dispatchEvent(new CustomEvent("office-loading",{detail:{value,text}}));
+  $("progressBar").style.width = value + "%";
+  $("loadingText").textContent = text;
+}
+
+function modal(title, content) {
+  $("modalTitle").textContent = title;
+  $("modalBody").innerHTML = content;
+  $("modal").classList.remove("hidden");
+}
+
+function closeModal() {
+  $("modal").classList.add("hidden");
+  $("modalBody").replaceChildren();
+}
+
+$("closeModal").onclick = closeModal;
+
+$("modal").addEventListener("pointerdown", e => {
+  if (e.target === $("modal")) closeModal();
+});
+
+function tile(id, title, description, color = "blue") {
+  return `
+    <button id="${id}" class="tile tile-${color}">
+      <strong>${safe(title)}</strong>
+      <small>${safe(description)}</small>
+    </button>
+  `;
+}
+
+function field(label, id, value = "") {
+  return `
+    <div class="field">
+      <label for="${id}">${safe(label)}</label>
+      <input id="${id}" maxlength="80"
+             value="${safe(value)}">
+    </div>
+  `;
+}
+
+function updateCounts() {
+  $("employeeCount").textContent =
+    "Сотрудники: " + employees.length;
+
+  $("taskCount").textContent =
+    "Задания: " + employees.reduce(
+      (sum, p) => sum + p.tasks.length, 0
+    );
+}
+
+// --------------------------------------------
+// СОЗДАНИЕ 3D ТОЛЬКО ПОСЛЕ СТАРТА
+// --------------------------------------------
+
+
+// =================================================================
+// 03 / THREE.JS INITIALIZATION — будущий scene.js
+// =================================================================
+async function initialize3D() {
+  if (initialized) return;
+  if (initializing) return initializing;
+
+  initializing = (async () => {
+    progress(5, "Загрузка графического движка...");
+
+    const [
+      threeModule,
+      controlsModule,
+      loaderModule
+    ] = await Promise.all([
+      import("three"),
+      import("three/addons/controls/OrbitControls.js"),
+      import("three/addons/loaders/GLTFLoader.js")
+    ]);
+
+    THREE = threeModule;
+    OrbitControls = controlsModule.OrbitControls;
+    GLTFLoader = loaderModule.GLTFLoader;
+
+    progress(20, "Создание 3D-пространства...");
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xa8bbcf);
+
+    renderer = new THREE.WebGLRenderer({
+      canvas: $("scene"),
+      antialias: true
+    });
+
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio || 1, 2)
+    );
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    camera = new THREE.PerspectiveCamera(
+      45, 1, 0.1, 500
+    );
+    camera.position.set(0, 25, 0.01); // Старт строго над офисом
+
+    controls = new OrbitControls(camera, $("scene"));
+    controls.target.set(0, 0, 0);
+    controls.enableDamping = true;
+    controls.minDistance = 1.2;
+    controls.maxDistance = 150;
+    controls.maxPolarAngle = Math.PI / 2.03;
+    controls.screenSpacePanning = true;
+    controls.rotateSpeed = 0.8;
+    controls.zoomSpeed = 1.1;
+    controls.panSpeed = 1.2;
+
+    controls.mouseButtons = {
+      LEFT: THREE.MOUSE.ROTATE,
+      MIDDLE: THREE.MOUSE.DOLLY,
+      RIGHT: THREE.MOUSE.PAN
+    };
+
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+    clock = new THREE.Clock();
+    loader = new GLTFLoader();
+    navigation = new OfficeNavigation();
+
+    scene.add(new THREE.HemisphereLight(
+      0xffffff, 0x8094aa, 2
+    ));
+
+    const sun = new THREE.DirectionalLight(
+      0xffffff, 2
+    );
+    sun.position.set(12, 28, 12);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.camera.left = -35;
+    sun.shadow.camera.right = 35;
+    sun.shadow.camera.top = 35;
+    sun.shadow.camera.bottom = -35;
+    scene.add(sun);
+
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(100, 100),
+      new THREE.MeshStandardMaterial({
+        color: 0xd6e0eb,
+        roughness: 1
+      })
+    );
+
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -0.025;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    grid = new THREE.GridHelper(
+      70, 70, 0x8099b0, 0xc0cfdf
+    );
+    grid.visible = false;
+    scene.add(grid);
+
+    progress(40, "Загрузка модели офиса...");
+
+    const office = await loadGLB("./models/office.glb", "office");
+
+    if (office) {
+      officeRoot = office;
+      scene.add(officeRoot);
+    } else {
+      officeRoot = demoOffice();
+    }
+
+    navigation.build(officeRoot, !office);
+
+    progress(75, "Загрузка персонажа...");
+
+    const person = await loadGLB("./models/sosiska.glb", "person");
+
+    if (person) {
+      // Обёртка сохраняет поправку высоты при клонировании и перемещении.
+      fitModel(person, 0.20);
+      personTemplate = new THREE.Group();
+      personTemplate.add(person);
+    } else {
+      personTemplate = demoPerson();
+    }
+
+    personTemplate.traverse(node => {
+      if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+
+    bindSceneControls();
+    resize();
+
+    new ResizeObserver(resize).observe($("viewport"));
+
+    initialized = true;
+    progress(100, "3D-сцена готова");
+    // После фактической загрузки сразу показываем игровой мир.
+    if (localStorage.getItem(STORAGE)) loadGame();
+    if (!running) newGame();
+    window.dispatchEvent(new Event("office-ready"));
+
+    animate();
+  })();
+
+  try {
+    await initializing;
+  } finally {
+    initializing = null;
+  }
+}
+
+// Загрузка GLB из папки проекта. Показываем реальный результат в стартовом окне.
+async function loadGLB(path, kind) {
+  const status = document.querySelector(`[data-model="${kind}"]`);
+  try {
+    const gltf = await loader.loadAsync(path, event => {
+      if (event.total > 0) {
+        const percent = Math.round(event.loaded / event.total * 100);
+        if (status) status.textContent = `Загрузка: ${percent}%`;
+      }
+    });
+    assetResults[kind] = true;
+    if (status) { status.textContent = "Загружена ✓"; status.style.color = "#78d9ae"; }
+    return gltf.scene;
+  } catch (error) {
+    assetResults[kind] = false;
+    if (status) { status.textContent = "Не найдена — демо"; status.style.color = "#e8b578"; }
+    console.warn("Не удалось загрузить модель:", path, error);
+    return null;
+  }
+}
+
+function resize() {
+  if (!renderer || !camera) return;
+
+  const el = $("viewport");
+  const width = el.clientWidth;
+  const height = el.clientHeight;
+
+  if (!width || !height) return;
+
+  renderer.setSize(width, height, false);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+}
+
+function box(w, h, d, color, x, y, z, parent) {
+  const mesh = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, d),
+    new THREE.MeshStandardMaterial({
+      color,
+      roughness: 0.75
+    })
+  );
+
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  parent.add(mesh);
+
+  return mesh;
+}
+
+// --------------------------------------------
+// ДЕМОНСТРАЦИОННЫЙ ОФИС
+// --------------------------------------------
+
+
+// =================================================================
+// 04 / DEMO OFFICE — будущий demo-office.js
+// =================================================================
+function demoOffice() {
+  const root = new THREE.Group();
+  root.name = "Демонстрационный офис";
+  scene.add(root);
+
+  box(18, 0.25, 13, 0xb9c9d9, 0, -0.13, 0, root);
+  box(18, 2.4, 0.18, 0xd8e5f0, 0, 1.1, -6.5, root);
+  box(0.18, 2.4, 13, 0xd8e5f0, -9, 1.1, 0, root);
+
+  for (let i = 0; i < 5; i++) {
+    box(
+      1.5, 1.3, 0.04, 0x91b9d8,
+      -6.5 + i * 3, 1.2, -6.38, root
+    );
+  }
+
+  for (let row = 0; row < 2; row++) {
+    for (let col = 0; col < 3; col++) {
+      const x = -5.5 + col * 5.5;
+      const z = -2.8 + row * 5.2;
+
+      box(2.5, 0.15, 1.3, 0xaebfd0, x, 1, z, root);
+
+      for (const dx of [-1, 1]) {
+        for (const dz of [-0.45, 0.45]) {
+          box(
+            0.12, 0.95, 0.12, 0x748ba2,
+            x + dx, 0.48, z + dz, root
+          );
+        }
+      }
+
+      box(0.9, 0.6, 0.08, 0x293c50, x, 1.45, z - 0.35, root);
+      box(0.95, 0.06, 0.5, 0x8398b0, x, 1.06, z + 0.1, root);
+      box(0.9, 0.12, 0.8, 0x58718e, x, 0.48, z + 1.2, root);
+      box(0.12, 0.65, 0.12, 0x58718e, x, 0.8, z + 1.5, root);
+    }
+  }
+
+  box(2.2, 1.8, 0.7, 0x7794b0, 7.1, 0.9, -4.6, root);
+  return root;
+}
+
+// --------------------------------------------
+// ДЕМОНСТРАЦИОННАЯ СОСИСКА
+// --------------------------------------------
+
+
+// =================================================================
+// 05 / DEMO CHARACTER — будущий demo-person.js
+// =================================================================
+function demoPerson() {
+  const root = new THREE.Group();
+
+  const skin = new THREE.MeshStandardMaterial({
+    color: 0xd78b69,
+    roughness: 0.85
+  });
+
+  const body = new THREE.Mesh(
+    new THREE.CapsuleGeometry(0.43, 0.85, 8, 16),
+    skin
+  );
+  body.position.y = 1.18;
+  root.add(body);
+
+  for (const x of [-0.18, 0.18]) {
+    const leg = new THREE.Mesh(
+      new THREE.CapsuleGeometry(0.13, 0.38, 4, 10),
+      skin
+    );
+    leg.position.set(x, 0.35, 0);
+    root.add(leg);
+  }
+
+  for (const x of [-0.52, 0.52]) {
+    const arm = new THREE.Mesh(
+      new THREE.CapsuleGeometry(0.10, 0.55, 4, 10),
+      skin
+    );
+    arm.position.set(x, 1.25, 0);
+    arm.rotation.z = x > 0 ? -0.22 : 0.22;
+    root.add(arm);
+  }
+
+  const eyeMaterial = new THREE.MeshStandardMaterial({
+    color: 0x20242b
+  });
+
+  for (const x of [-0.16, 0.16]) {
+    const eye = new THREE.Mesh(
+      new THREE.SphereGeometry(0.055, 12, 8),
+      eyeMaterial
+    );
+    eye.position.set(x, 1.64, 0.4);
+    root.add(eye);
+  }
+
+  const mouth = new THREE.Mesh(
+    new THREE.TorusGeometry(
+      0.12, 0.025, 6, 16, Math.PI
+    ),
+    new THREE.MeshStandardMaterial({
+      color: 0x743f3d
+    })
+  );
+
+  mouth.position.set(0, 1.37, 0.43);
+  mouth.rotation.z = Math.PI;
+  root.add(mouth);
+
+  return root;
+}
+
+function fitModel(group, height) {
+  group.updateMatrixWorld(true);
+
+  const bounds = new THREE.Box3().setFromObject(group);
+  const size = bounds.getSize(new THREE.Vector3());
+
+  if (size.y < 0.00001) return;
+
+  group.scale.multiplyScalar(height / size.y);
+  group.updateMatrixWorld(true);
+
+  const bottom = new THREE.Box3().setFromObject(group).min.y;
+  group.position.y -= bottom;
+}
+
+// --------------------------------------------
+// СОТРУДНИКИ
+// --------------------------------------------
+
+
+// =================================================================
+// 06 / EMPLOYEE CREATION — будущий employees.js
+// =================================================================
+function spawn(data = {}) {
+  if (!personTemplate) return null;
+
+  if (employees.length >= 30) {
+    toast("Максимум 30 сотрудников");
+    return null;
+  }
+
+  const id = data.id || uid();
+  const root = personTemplate.clone(true);
+
+  const x = Number(
+    data.x ?? (-4 + employees.length % 5 * 2)
+  );
+
+  const z = Number(
+    data.z ?? (3 + Math.floor(employees.length / 5) * 2)
+  );
+
+  const position = navigation.nearestFree(x, z);
+
+  if (!position) {
+    toast("Нет свободного места");
+    return null;
+  }
+
+  root.position.copy(position);
+  root.rotation.y = Number(data.heading || 0);
+
+  root.traverse(node => {
+    node.userData.employeeId = id;
+  });
+
+  scene.add(root);
+
+  const bounds = new THREE.Box3().setFromObject(root);
+
+  const person = {
+    id,
+    root,
+    name: data.name ||
+      ["Алекс", "Макс", "Дэн", "Лео", "Ник"][employees.length % 5],
+    role: data.role || "Сотрудник",
+    department: data.department || "Офис",
+    tasks: Array.isArray(data.tasks) ? data.tasks : [],
+    headHeight: Math.max(
+      0.5,
+      bounds.max.y - root.position.y
+    ),
+    emotionName: data.emotionName || "Нейтрально",
+    emotion: null,
+    emotionIcon: null,
+    emotionUntil: 0,
+    nextEmotionAt: performance.now() + 1000 * (10 + Math.random() * 5),
+    // Независимый контроллер поведения каждого сотрудника
+    ai: { nextWalkAt: performance.now() + 1500 + Math.random() * 5500,
+          manualUntil: 0, idleUntil: 0, lastPosition: null },
+    path: [],
+    target: null
+  };
+
+  employees.push(person);
+
+  if (!selected) selected = person;
+
+  // Значок появляется по таймеру; сохранённое название остаётся в данных.
+
+
+  updateCounts();
+  return person;
+}
+
+function clearPeople() {
+  for (const person of employees) {
+    scene.remove(person.root);
+
+    if (person.emotion) {
+      scene.remove(person.emotion);
+      person.emotion.material.map?.dispose();
+      person.emotion.material.dispose();
+    }
+    person.emotionIcon?.remove();
+  }
+
+  employees.length = 0;
+  selected = null;
+  updateCounts();
+}
+
+function newGame() {
+  clearPeople();
+  funds = 500;
+
+  for (let i = 0; i < 5; i++) spawn();
+
+  running = true;
+  $("start").classList.add("hidden");
+  toast("Новая игра запущена");
+}
+
+
+// =================================================================
+// 07 / SAVE + LOAD — будущий storage.js
+// =================================================================
+function serialize() {
+  return {
+    version: 3,
+    funds,
+    employees: employees.map(p => ({
+      id: p.id,
+      name: p.name,
+      role: p.role,
+      department: p.department,
+      x: p.root.position.x,
+      z: p.root.position.z,
+      heading: p.root.rotation.y,
+      tasks: p.tasks,
+      emotionName: p.emotionName
+    })),
+    camera: {
+      position: camera.position.toArray(),
+      target: controls.target.toArray()
+    }
+  };
+}
+
+function save() {
+  if (!initialized) return;
+
+  try {
+    localStorage.setItem(
+      STORAGE,
+      JSON.stringify(serialize())
+    );
+
+    $("saveStatus").textContent = "Сохранено";
+    toast("Сохранение выполнено");
+  } catch (error) {
+    toast("Ошибка сохранения: " + error.message);
+  }
+}
+
+function loadGame() {
+  const raw = localStorage.getItem(STORAGE);
+
+  if (!raw) {
+    toast("Сохранение отсутствует");
+    return;
+  }
+
+  try {
+    const data = JSON.parse(raw);
+
+    if (!Array.isArray(data.employees)) {
+      throw new Error("Неверный формат сотрудников");
+    }
+
+    clearPeople();
+
+    funds = Number(data.funds ?? 500);
+
+    for (const record of data.employees) {
+      spawn(record);
+    }
+
+    if (
+      Array.isArray(data.camera?.position) &&
+      Array.isArray(data.camera?.target)
+    ) {
+      camera.position.fromArray(data.camera.position);
+      controls.target.fromArray(data.camera.target);
+      controls.update();
+    }
+
+    running = true;
+    $("start").classList.add("hidden");
+    toast("Игра загружена");
+  } catch (error) {
+    toast("Ошибка загрузки: " + error.message);
+  }
+}
+
+// --------------------------------------------
+// СТАРТОВЫЕ КНОПКИ
+// --------------------------------------------
+
+async function start(mode) {
+  $("newGame").disabled = true;
+  $("continueGame").disabled = true;
+
+  try {
+    await initialize3D();
+
+    if (mode === "new") {
+      newGame();
+    } else {
+      loadGame();
+    }
+  } catch (error) {
+    console.error(error);
+    progress(0, "Ошибка: " + error.message);
+  } finally {
+    $("newGame").disabled = false;
+    $("continueGame").disabled =
+      !localStorage.getItem(STORAGE);
+  }
+}
+
+$("newGame").onclick = () => start("new");
+$("continueGame").onclick = () => start("load");
+
+$("continueGame").disabled =
+  !localStorage.getItem(STORAGE);
+
+$("fullscreen").onclick = async () => {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await document.documentElement.requestFullscreen();
+    }
+  } catch (error) {
+    toast(error.message);
+  }
+};
+
+// --------------------------------------------
+// ВЫБОР И ПЕРЕМЕЩЕНИЕ
+// --------------------------------------------
+
+function setMouse(event) {
+  const rect = $("scene").getBoundingClientRect();
+
+  mouse.set(
+    (event.clientX - rect.left) / rect.width * 2 - 1,
+    -(event.clientY - rect.top) / rect.height * 2 + 1
+  );
+
+  raycaster.setFromCamera(mouse, camera);
+}
+
+function pickPerson(event) {
+  setMouse(event);
+
+  const hits = raycaster.intersectObjects(
+    employees.map(p => p.root),
+    true
+  );
+
+  for (const hit of hits) {
+    const id = hit.object.userData.employeeId;
+    const person = employees.find(p => p.id === id);
+    if (person) return person;
+  }
+
+  return null;
+}
+
+function floorPoint(event) {
+  setMouse(event);
+
+  const point = new THREE.Vector3();
+
+  const plane = new THREE.Plane(
+    new THREE.Vector3(0, 1, 0),
+    0
+  );
+
+  return raycaster.ray.intersectPlane(plane, point)
+    ? point
+    : null;
+}
+
+function setDestination(person, point) {
+  // Ручной приказ имеет приоритет над автономным перемещением.
+  if (person.ai) {
+    person.ai.manualUntil = performance.now() + 20000;
+    person.ai.nextWalkAt = person.ai.manualUntil + 2000;
+  }
+  const route = navigation.path(
+    person.root.position,
+    point
+  );
+
+  if (!route || !route.length) {
+    toast("Маршрут заблокирован");
+    return;
+  }
+
+  person.path = route;
+  person.target = person.path.shift();
+  toast("Маршрут построен");
+}
+
+function movePerson(person, dx, dz) {
+  const old = person.root.position.clone();
+
+  const next = collisions
+    ? navigation.move(old, dx, dz)
+    : new THREE.Vector3(
+        old.x + dx, 0, old.z + dz
+      );
+
+  // Границы офиса действуют даже при
+  // отключённых столкновениях с мебелью.
+  if (!collisions) {
+    const b = navigation.bounds;
+    next.x = THREE.MathUtils.clamp(
+      next.x, b.minX + 0.32, b.maxX - 0.32
+    );
+    next.z = THREE.MathUtils.clamp(
+      next.z, b.minZ + 0.32, b.maxZ - 0.32
+    );
+  }
+
+  person.root.position.copy(next);
+
+  const moved = old.distanceTo(next);
+
+  if (moved > 0.00001) {
+    person.root.rotation.y = Math.atan2(dx, dz);
+  }
+
+  return moved;
+}
+
+
+// =================================================================
+// 08 / CAMERA + POINTER CONTROLS — будущий controls.js
+// =================================================================
+function bindSceneControls() {
+  const canvas = $("scene");
+
+  canvas.addEventListener("pointerdown", event => {
+    pointerDown = {
+      x: event.clientX,
+      y: event.clientY,
+      button: event.button
+    };
+
+    if (event.button === 0) {
+      controls.mouseButtons.LEFT =
+        event.shiftKey || keys.has("Space")
+          ? THREE.MOUSE.PAN
+          : THREE.MOUSE.ROTATE;
+    }
+  }, true);
+
+  canvas.addEventListener("pointerup", event => {
+    if (!running || !pointerDown) return;
+    if (pointerDown.button !== 0) return;
+
+    const distance = Math.hypot(
+      event.clientX - pointerDown.x,
+      event.clientY - pointerDown.y
+    );
+
+    if (distance > 5) return;
+
+    const person = pickPerson(event);
+
+    if (person) {
+      selected = person;
+      employeeCard(person);
+    } else if (selected) {
+      const point = floorPoint(event);
+      if (point) setDestination(selected, point);
+    }
+  });
+
+  canvas.addEventListener("contextmenu", event => {
+    event.preventDefault();
+
+    if (!running) return;
+
+    const person = pickPerson(event);
+
+    if (person) {
+      selected = person;
+      employeeCard(person);
+    }
+  });
+}
+
+// --------------------------------------------
+// КАРТОЧКА СОТРУДНИКА
+// --------------------------------------------
+
+
+// =================================================================
+// 09 / EMPLOYEE PANELS — будущий panels.js
+// =================================================================
+function employeeCard(person) {
+  selected = person;
+
+  modal("Карточка сотрудника", `
+    ${field("Имя", "personName", person.name)}
+    ${field("Должность", "personRole", person.role)}
+    ${field("Отдел", "personDepartment", person.department)}
+
+    <p class="muted">
+      ID: ${safe(person.id)} ·
+      Заданий: ${person.tasks.length}
+    </p>
+
+    <div class="actions">
+      ${tile("pSave", "Сохранить", "Данные сотрудника", "gold")}
+      ${tile("pTasks", "Задания", "Проекты и поручения", "blue")}
+      ${tile("pEmotion", "Эмоции", "Мимика персонажа", "purple")}
+      ${tile("pFocus", "Найти", "Камера на сотрудника", "green")}
+      ${tile("pRotate", "Повернуть", "Поворот на 45°", "slate")}
+      ${tile("pStop", "Остановить", "Прекратить движение", "slate")}
+      ${tile("pDelete", "Удалить", "Убрать из офиса", "red")}
+    </div>
+  `);
+
+  $("pSave").onclick = () => {
+    person.name =
+      $("personName").value.trim() || person.name;
+
+    person.role =
+      $("personRole").value.trim() || person.role;
+
+    person.department =
+      $("personDepartment").value.trim() || person.department;
+
+    save();
+    employeeCard(person);
+  };
+
+  $("pTasks").onclick = () => taskList(person);
+  $("pEmotion").onclick = () => emotionMenu(person);
+
+  $("pFocus").onclick = () => {
+    focusPerson(person);
+    closeModal();
+  };
+
+  $("pRotate").onclick = () => {
+    person.root.rotation.y += Math.PI / 4;
+    save();
+    employeeCard(person);
+  };
+
+  $("pStop").onclick = () => {
+    person.path = [];
+    person.target = null;
+    closeModal();
+    toast(person.name + " остановлен");
+  };
+
+  $("pDelete").onclick = () => {
+    if (!confirm("Удалить " + person.name + "?")) return;
+
+    scene.remove(person.root);
+
+    if (person.emotion) {
+      scene.remove(person.emotion);
+      person.emotion.material.map?.dispose();
+      person.emotion.material.dispose();
+    }
+    person.emotionIcon?.remove();
+
+    employees.splice(employees.indexOf(person), 1);
+    selected = employees[0] || null;
+
+    updateCounts();
+    save();
+    staffList();
+  };
+}
+
+function staffList() {
+  modal("Сотрудники", `
+    <div class="list">
+      ${employees.map(p => `
+        <div class="item">
+          <div>
+            <strong>${safe(p.name)}</strong>
+            <small>
+              ${safe(p.role)} · ${safe(p.department)}
+            </small>
+          </div>
+          <button data-person="${safe(p.id)}">Открыть</button>
+        </div>
+      `).join("") || '<p class="muted">Сотрудников нет</p>'}
+    </div>
+
+    <div class="actions">
+      ${tile("addStaff", "+ Сотрудник", "Добавить персонажа", "gold")}
+    </div>
+  `);
+
+  $("modalBody")
+    .querySelectorAll("[data-person]")
+    .forEach(button => {
+      button.onclick = () => {
+        const p = employees.find(
+          x => x.id === button.dataset.person
+        );
+        if (p) employeeCard(p);
+      };
+    });
+
+  $("addStaff").onclick = () => {
+    const p = spawn();
+
+    if (p) {
+      save();
+      employeeCard(p);
+    }
+  };
+}
+
+// --------------------------------------------
+// ЗАДАНИЯ
+// --------------------------------------------
+
+function taskList(person) {
+  modal("Задания: " + person.name, `
+    <div class="list">
+      ${person.tasks.map(task => `
+        <div class="item">
+          <div>
+            <strong>${safe(task.title)}</strong>
+            <small>${safe(task.status)}</small>
+          </div>
+          <button data-task="${safe(task.id)}">Открыть</button>
+        </div>
+      `).join("") || '<p class="muted">Заданий нет</p>'}
+    </div>
+
+    <div class="actions">
+      ${tile("newTask", "Новое задание", "Создать поручение", "gold")}
+      ${tile("backPerson", "Назад", "К сотруднику", "slate")}
+    </div>
+  `);
+
+  $("modalBody")
+    .querySelectorAll("[data-task]")
+    .forEach(button => {
+      button.onclick = () => {
+        const task = person.tasks.find(
+          t => t.id === button.dataset.task
+        );
+        taskDetail(person, task);
+      };
+    });
+
+  $("newTask").onclick = () => taskEditor(person);
+  $("backPerson").onclick = () => employeeCard(person);
+}
+
+function taskEditor(person) {
+  modal("Создать задание", `
+    <div class="field">
+      <label>Тип задания</label>
+      <select id="taskType">
+        <option value="custom">Обычное поручение</option>
+        <option value="walk">Перемещение по офису</option>
+        <option value="image">ИИ-изображение (API не подключён)</option>
+        <option value="chat">ИИ-чат (API не подключён)</option>
+        <option value="read">Документ (обработчик не подключён)</option>
+      </select>
+    </div>
+
+    ${field("Название", "taskTitle")}
+
+    <div class="field">
+      <label>Описание / промпт</label>
+      <textarea id="taskPrompt" maxlength="1500"></textarea>
+    </div>
+
+    <div class="actions">
+      ${tile("createTask", "Создать", "Добавить задание", "gold")}
+      ${tile("cancelTask", "Назад", "Список заданий", "slate")}
+    </div>
+  `);
+
+  $("createTask").onclick = () => {
+    const title = $("taskTitle").value.trim();
+
+    if (!title) {
+      toast("Введите название");
+      return;
+    }
+
+    if (person.tasks.length >= 25) {
+      toast("Максимум 25 заданий");
+      return;
+    }
+
+    const task = {
+      id: uid(),
+      title,
+      type: $("taskType").value,
+      prompt: $("taskPrompt").value,
+      status: "Создано"
+    };
+
+    person.tasks.push(task);
+    updateCounts();
+    save();
+    taskDetail(person, task);
+  };
+
+  $("cancelTask").onclick = () => taskList(person);
+}
+
+function taskDetail(person, task) {
+  if (!task) return taskList(person);
+
+  modal("Задание", `
+    <h3>${safe(task.title)}</h3>
+    <p class="muted">Статус: ${safe(task.status)}</p>
+    <p style="white-space:pre-wrap">
+      ${safe(task.prompt || "Описание отсутствует")}
+    </p>
+
+    <div class="actions">
+      ${tile("completeTask", "Завершить", "Отметить вручную", "green")}
+      ${tile("deleteTask", "Удалить", "Удалить задание", "red")}
+      ${tile("backTasks", "Назад", "Список заданий", "slate")}
+    </div>
+  `);
+
+  $("completeTask").onclick = () => {
+    task.status = "Выполнено вручную";
+    save();
+    taskDetail(person, task);
+  };
+
+  $("deleteTask").onclick = () => {
+    person.tasks.splice(person.tasks.indexOf(task), 1);
+    updateCounts();
+    save();
+    taskList(person);
+  };
+
+  $("backTasks").onclick = () => taskList(person);
+}
+
+function allTasks() {
+  modal("Все задания", `
+    <div class="list">
+      ${employees.flatMap(p =>
+        p.tasks.map(t => `
+          <div class="item">
+            <div>
+              <strong>${safe(t.title)}</strong>
+              <small>${safe(p.name)} · ${safe(t.status)}</small>
+            </div>
+            <button data-owner="${safe(p.id)}"
+                    data-task="${safe(t.id)}">
+              Открыть
+            </button>
+          </div>
+        `)
+      ).join("") || '<p class="muted">Заданий нет</p>'}
+    </div>
+
+    <div class="actions">
+      ${tile("allNewTask", "Создать", "Новое задание", "gold")}
+    </div>
+  `);
+
+  $("modalBody")
+    .querySelectorAll("[data-owner]")
+    .forEach(button => {
+      button.onclick = () => {
+        const p = employees.find(
+          x => x.id === button.dataset.owner
+        );
+
+        const t = p?.tasks.find(
+          x => x.id === button.dataset.task
+        );
+
+        if (p && t) taskDetail(p, t);
+      };
+    });
+
+  $("allNewTask").onclick = () => {
+    if (selected) taskEditor(selected);
+    else toast("Добавьте сотрудника");
+  };
+}
+
+// --------------------------------------------
+// ЭМОЦИИ НАД ГОЛОВОЙ
+// --------------------------------------------
+
+function emotionMenu(person) {
+  const emotions = [
+    "Радость",
+    "Смех",
+    "Грусть",
+    "Удивление",
+    "Сон",
+    "Вопрос",
+    "Нейтрально"
+  ];
+
+  modal("Эмоции: " + person.name, `
+    <p class="muted">
+      Эмоция находится непосредственно над головой.
+    </p>
+
+    <div class="actions">
+      ${emotions.map((name, i) =>
+        tile("emotion" + i, name, "Применить", "purple")
+      ).join("")}
+    </div>
+
+    <button id="emotionBack">Назад</button>
+  `);
+
+  emotions.forEach((name, i) => {
+    $("emotion" + i).onclick = () => {
+      setEmotion(person, name);
+      save();
+      closeModal();
+    };
+  });
+
+  $("emotionBack").onclick = () => employeeCard(person);
+}
+
+// Четыре изображения из папки Emotion. Названия файлов можно менять здесь.
+const EMOTION_ICONS = [
+  {name:'Информация', file:'file_00000000617c8210848eebe7ba194f3d_edited (1).png', description:'Сведения о сотруднике: должность, отдел, задачи и текущее состояние.'},
+  {name:'Внимание', file:'file_00000000617c8210848eebe7ba194f3d_edited (2).png', description:'Важное событие или предупреждение: проверьте задачи и маршрут сотрудника.'},
+  {name:'Переживание', file:'file_00000000617c8210848eebe7ba194f3d_edited (3).png', description:'Сотрудник испытывает напряжение или усталость. Проверьте его текущую работу.'},
+  {name:'Достижение', file:'file_00000000617c8210848eebe7ba194f3d_edited.png', description:'Положительное событие: успех, завершение работы или достижение.'}
+];
+const EMOTION_MIN_MS = 10000;
+const EMOTION_MAX_MS = 15000;
+const EMOTION_VISIBLE_MS = 3000;
+const EMOTION_GAP = 0.35; // расстояние над макушкой в единицах 3D
+let emotionProject = null; // THREE загружается асинхронно
+
+function removeEmotionIcon(person) {
+  person.emotionIcon?.remove();
+  person.emotionIcon = null;
+  person.emotion = null;
+}
+function showEmotionIcon(person, emotion = EMOTION_ICONS[Math.floor(Math.random()*EMOTION_ICONS.length)]) {
+  removeEmotionIcon(person);
+  person.emotionName = emotion.name;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'emotion-bubble';
+  button.title = emotion.name;
+  button.setAttribute('aria-label', emotion.name + ': ' + person.name);
+  const img = document.createElement('img');
+  img.alt = emotion.name;
+  img.src = './Emotion/' + emotion.file;
+  img.onerror = () => { img.onerror = null; img.src = './Emotion/' + ['info.png','alert.png','stress.png','star.png'][EMOTION_ICONS.indexOf(emotion)] ; };
+  button.append(img);
+  button.addEventListener('click', event => {
+    event.stopPropagation();
+    selected = person;
+    emotionDetails(person, emotion);
+  });
+  $('emotionLayer').append(button);
+  person.emotionIcon = button;
+  person.emotionUntil = performance.now() + EMOTION_VISIBLE_MS;
+}
+function emotionDetails(person, emotion) {
+  modal(emotion.name + ' — ' + person.name, `
+    <p>${safe(emotion.description)}</p>
+    <p class="muted">Сотрудник: ${safe(person.name)} · ${safe(person.role)} · ${safe(person.department)}</p>
+    <p class="muted">Заданий: ${person.tasks.length}</p>
+    <div class="actions">
+      ${tile('emotionOpenEmployee','Карточка сотрудника','Подробнее о сотруднике','blue')}
+      ${tile('emotionOpenTasks','Задания','Посмотреть задачи','gold')}
+    </div>`);
+  $('emotionOpenEmployee').onclick = () => employeeCard(person);
+  $('emotionOpenTasks').onclick = () => taskList(person);
+}
+function setEmotion(person, name, notify = true) {
+  if (name === 'Нейтрально') { removeEmotionIcon(person); person.emotionName = name; }
+  else {
+    const emotion = EMOTION_ICONS.find(e => e.name === name) || EMOTION_ICONS[0];
+    showEmotionIcon(person, emotion);
+  }
+  if (notify) toast('Эмоция: ' + name);
+}
+function updateEmotionIcons(now) {
+  if (!running || !camera) return;
+  if (!emotionProject) emotionProject = new THREE.Vector3();
+  const viewport = $('viewport');
+  const w = viewport.clientWidth, h = viewport.clientHeight;
+  for (const person of employees) {
+    if (now >= person.nextEmotionAt) {
+      showEmotionIcon(person);
+      person.nextEmotionAt = now + EMOTION_MIN_MS + Math.random() * (EMOTION_MAX_MS - EMOTION_MIN_MS);
+    }
+    if (person.emotionIcon && now >= person.emotionUntil) {
+      removeEmotionIcon(person);
+    }
+    if (!person.emotionIcon) continue;
+    emotionProject.copy(person.root.position);
+    emotionProject.y += person.headHeight + EMOTION_GAP;
+    emotionProject.project(camera);
+    const visible = emotionProject.z > -1 && emotionProject.z < 1 && Math.abs(emotionProject.x) < 1.15 && Math.abs(emotionProject.y) < 1.15;
+    person.emotionIcon.style.display = visible ? '' : 'none';
+    if (visible) {
+      person.emotionIcon.style.left = ((emotionProject.x+1)*0.5*w)+'px';
+      person.emotionIcon.style.top = ((1-emotionProject.y)*0.5*h)+'px';
+    }
+  }
+}
+
+// --------------------------------------------
+// КАМЕРА
+// --------------------------------------------
+
+function focusPerson(person) {
+  controls.target.copy(person.root.position);
+
+  camera.position.copy(person.root.position).add(
+    new THREE.Vector3(6, 9, 9)
+  );
+
+  controls.update();
+}
+
+function setView(view) {
+  if (view === "top") {
+    camera.position.copy(controls.target).add(
+      new THREE.Vector3(0.01, 25, 0.01)
+    );
+  }
+
+  if (view === "angle") {
+    camera.position.copy(controls.target).add(
+      new THREE.Vector3(16, 20, 22)
+    );
+  }
+
+  if (view === "side") {
+    camera.position.copy(controls.target).add(
+      new THREE.Vector3(0, 6, 24)
+    );
+  }
+
+  if (view === "center") {
+    controls.target.set(0, 0, 0);
+    camera.position.set(0, 25, 0.01); // Старт строго над офисом
+  }
+
+  if (view === "focus" && selected) {
+    focusPerson(selected);
+  }
+
+  if (view === "left" || view === "right") {
+    const offset = camera.position.clone()
+      .sub(controls.target);
+
+    offset.applyAxisAngle(
+      new THREE.Vector3(0, 1, 0),
+      view === "left" ? -0.26 : 0.26
+    );
+
+    camera.position.copy(controls.target).add(offset);
+  }
+
+  if (view === "near" || view === "far") {
+    camera.position.sub(controls.target)
+      .multiplyScalar(view === "near" ? 0.8 : 1.25)
+      .add(controls.target);
+  }
+
+  controls.update();
+}
+
+function cameraMenu() {
+  const views = [
+    ["top", "Сверху"],
+    ["angle", "Под углом"],
+    ["side", "Сбоку"],
+    ["center", "Центр"],
+    ["focus", "На сотрудника"],
+    ["left", "Влево"],
+    ["right", "Вправо"],
+    ["near", "Приблизить"],
+    ["far", "Отдалить"]
+  ];
+
+  modal("Камера", `
+    <div class="actions">
+      ${views.map(([id, name]) => `
+        <button class="tile tile-blue"
+                data-view="${id}">
+          <strong>${name}</strong>
+          <small>Изменить положение камеры</small>
+        </button>
+      `).join("")}
+    </div>
+
+    <p class="muted">
+      ЛКМ + перетаскивание — вращение.<br>
+      Shift + ЛКМ — панорама.<br>
+      Колесо — приближение.<br>
+      Стрелки — движение камеры.<br>
+      F — фокус на сотруднике.
+    </p>
+  `);
+
+  $("modalBody")
+    .querySelectorAll("[data-view]")
+    .forEach(button => {
+      button.onclick = () => {
+        setView(button.dataset.view);
+        toast("Камера обновлена");
+      };
+    });
+}
+
+// --------------------------------------------
+// НАСТРОЙКИ
+// --------------------------------------------
+
+function settingsMenu() {
+  modal("Настройки игры", `
+    <div class="actions">
+      ${tile("gridToggle", "Сетка", "Показать / скрыть", "blue")}
+      ${tile("shadowToggle", "Тени", "Включить / выключить", "slate")}
+      ${tile("debugToggle", "Коллизии", "Показать препятствия", "gold")}
+      ${tile("collisionToggle", "Столкновения", "Вкл. / выкл.", "green")}
+      ${tile("cameraReset", "Камера", "Сбросить положение", "blue")}
+      ${tile("exportJSON", "Экспорт", "Скачать JSON", "purple")}
+      ${tile("importJSON", "Импорт", "Загрузить JSON", "purple")}
+      ${tile("deleteSave", "Очистить", "Удалить сохранение", "red")}
+    </div>
+
+    <input type="file" id="jsonFile"
+           accept=".json,application/json" hidden>
+
+    <p class="muted">
+      Оранжевые области показывают обнаруженные препятствия.
+      Для сложной GLB-модели коллизии необходимо уточнять.
+    </p>
+  `);
+
+  $("gridToggle").onclick = () => {
+    grid.visible = !grid.visible;
+    toast(grid.visible ? "Сетка включена" : "Сетка скрыта");
+  };
+
+  $("shadowToggle").onclick = () => {
+    renderer.shadowMap.enabled = !renderer.shadowMap.enabled;
+    renderer.shadowMap.needsUpdate = true;
+    toast("Настройка теней изменена");
+  };
+
+  $("debugToggle").onclick = () => {
+    const visible = navigation.toggleDebug(scene);
+    toast(visible ? "Препятствия показаны" : "Препятствия скрыты");
+  };
+
+  $("collisionToggle").onclick = () => {
+    collisions = !collisions;
+
+    toast(
+      collisions
+        ? "Столкновения включены"
+        : "Столкновения с мебелью отключены"
+    );
+  };
+
+  $("cameraReset").onclick = () => {
+    setView("center");
+    toast("Камера сброшена");
+  };
+
+  $("exportJSON").onclick = () => {
+    const blob = new Blob(
+      [JSON.stringify(serialize(), null, 2)],
+      { type: "application/json" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "sosiska-save.json";
+    link.click();
+
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+  };
+
+  $("importJSON").onclick = () => $("jsonFile").click();
+
+  $("jsonFile").onchange = async event => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const data = JSON.parse(await file.text());
+
+      if (!Array.isArray(data.employees)) {
+        throw new Error("Нет массива employees");
+      }
+
+      localStorage.setItem(STORAGE, JSON.stringify(data));
+      loadGame();
+      closeModal();
+    } catch (error) {
+      toast("Ошибка импорта: " + error.message);
+    }
+  };
+
+  $("deleteSave").onclick = () => {
+    if (!confirm("Удалить сохранение?")) return;
+
+    localStorage.removeItem(STORAGE);
+    $("saveStatus").textContent = "Не сохранено";
+    toast("Сохранение удалено");
+  };
+}
+
+// --------------------------------------------
+// ГЛАВНОЕ МЕНЮ
+// --------------------------------------------
+
+document.querySelectorAll("[data-action]")
+  .forEach(button => {
+    button.onclick = () => {
+      const action = button.dataset.action;
+
+      if (action === "home") {
+        closeModal();
+        $("start").classList.remove("hidden");
+        progress(100, "Сцена уже загружена");
+        return;
+      }
+
+      if (!initialized || !running) {
+        toast("Сначала начните игру");
+        return;
+      }
+
+      if (action === "staff") staffList();
+
+      if (action === "add") {
+        const person = spawn();
+
+        if (person) {
+          save();
+          employeeCard(person);
+        }
+      }
+
+      if (action === "tasks") allTasks();
+      if (action === "camera") cameraMenu();
+      if (action === "settings") settingsMenu();
+      if (action === "save") save();
+    };
+  });
+
+// --------------------------------------------
+// КЛАВИАТУРА
+// --------------------------------------------
+
+window.addEventListener("keydown", event => {
+  const tag = document.activeElement?.tagName;
+
+  if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) {
+    return;
+  }
+
+  if ([
+    "Space",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight"
+  ].includes(event.code)) {
+    event.preventDefault();
+  }
+
+  keys.add(event.code);
+
+  if (event.code === "Escape") closeModal();
+
+  if (event.ctrlKey && event.code === "KeyS") {
+    event.preventDefault();
+    save();
+  }
+
+  if (event.code === "KeyF" && selected && initialized) {
+    focusPerson(selected);
+  }
+});
+
+window.addEventListener("keyup", event => {
+  keys.delete(event.code);
+});
+
+window.addEventListener("blur", () => keys.clear());
+
+// --------------------------------------------
+// ИНДИВИДУАЛЬНОЕ АВТОНОМНОЕ ПОВЕДЕНИЕ NPC
+// Каждый сотрудник сам выбирает свободную точку и строит маршрут.
+// Ручное управление и клик по полу временно отключают автопрогулку.
+// --------------------------------------------
+function updateEmployeeAI(person, now) {
+  if (!person.ai || !navigation || !running) return;
+  const ai = person.ai;
+  if (now < ai.manualUntil || now < ai.nextWalkAt) return;
+  if (person.target || person.path.length) return;
+
+  const b = navigation.bounds;
+  const start = person.root.position;
+  for (let attempt = 0; attempt < 12; attempt++) {
+    // Чаще выбираем близкие точки, иногда — дальнюю часть офиса.
+    const range = Math.random() < 0.78 ? 4 : 11;
+    const x = Math.max(b.minX + 0.45, Math.min(b.maxX - 0.45,
+      start.x + (Math.random() * 2 - 1) * range));
+    const z = Math.max(b.minZ + 0.45, Math.min(b.maxZ - 0.45,
+      start.z + (Math.random() * 2 - 1) * range));
+    if (Math.hypot(x - start.x, z - start.z) < 1.2) continue;
+    if (!navigation.canStand(x, z)) continue;
+    const route = navigation.path(start, new THREE.Vector3(x, 0, z));
+    if (!route || !route.length) continue;
+    person.path = route;
+    person.target = person.path.shift() || null;
+    ai.nextWalkAt = now + 4000 + Math.random() * 6000;
+    return;
+  }
+  ai.nextWalkAt = now + 1500 + Math.random() * 3500;
+}
+
+// --------------------------------------------
+// ИГРОВОЙ ЦИКЛ
+// --------------------------------------------
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const dt = Math.min(clock.getDelta(), 0.05);
+
+  const typing = ["INPUT", "TEXTAREA", "SELECT"]
+    .includes(document.activeElement?.tagName);
+
+  const modalClosed =
+    $("modal").classList.contains("hidden");
+
+  const startClosed =
+    $("start").classList.contains("hidden");
+
+  if (
+    running &&
+    !typing &&
+    modalClosed &&
+    startClosed
+  ) {
+    if (selected) {
+      const x =
+        Number(keys.has("KeyD")) -
+        Number(keys.has("KeyA"));
+
+      const z =
+        Number(keys.has("KeyS")) -
+        Number(keys.has("KeyW"));
+
+      if (x || z) {
+        const length = Math.hypot(x, z);
+
+        selected.path = [];
+        selected.target = null;
+        if (selected.ai) {
+          selected.ai.manualUntil = performance.now() + 15000;
+          selected.ai.nextWalkAt = selected.ai.manualUntil + 2000;
+        }
+
+        movePerson(
+          selected,
+          x / length * 2.5 * dt,
+          z / length * 2.5 * dt
+        );
+      }
+    }
+
+    const cx =
+      Number(keys.has("ArrowRight")) -
+      Number(keys.has("ArrowLeft"));
+
+    const cz =
+      Number(keys.has("ArrowDown")) -
+      Number(keys.has("ArrowUp"));
+
+    if (cx || cz) {
+      const movement = new THREE.Vector3(
+        cx * dt * 8,
+        0,
+        cz * dt * 8
+      );
+
+      controls.target.add(movement);
+      camera.position.add(movement);
+    }
+
+    for (const person of employees) {
+      updateEmployeeAI(person, performance.now());
+      if (person.target) {
+        const direction = person.target.clone()
+          .sub(person.root.position);
+
+        direction.y = 0;
+        const distance = direction.length();
+
+        if (distance < 0.12) {
+          person.target = person.path.shift() || null;
+          if (!person.target && person.ai) person.ai.nextWalkAt = performance.now() + 2500 + Math.random() * 6500;
+        } else {
+          direction.normalize();
+
+          const step = Math.min(distance, 2 * dt);
+
+          const moved = movePerson(
+            person,
+            direction.x * step,
+            direction.z * step
+          );
+
+          if (moved < 0.00001) {
+            person.path = [];
+            person.target = null;
+            if (person.ai) person.ai.nextWalkAt = performance.now() + 1200 + Math.random() * 3000;
+          }
+        }
+      }
+
+
+    }
+  }
+
+  controls.update();
+  updateEmotionIcons(performance.now());
+  renderer.render(scene, camera);
+}
+
+// Автозагрузка 3D и моделей сразу после открытия страницы.
+// Кнопки начала игры продолжают работать и ждут завершения загрузки.
+window.addEventListener("DOMContentLoaded", () => {
+  initialize3D().catch(error => {
+    console.error("Ошибка предварительной загрузки", error);
+    progress(0, "Ошибка загрузки: " + error.message);
+    window.dispatchEvent(new CustomEvent("office-error",{detail:error.message}));
+  });
+});
+
+
+
+// ==============================================================
+// BROWSER INPUT POLICY / Обработка стандартных действий браузера
+// ==============================================================
+// Отключаем только системное контекстное меню. ПКМ на 3D-сцене
+// продолжает работать: существующий bindSceneControls() сам
+// обрабатывает событие contextmenu и открывает карточку персонажа.
+document.addEventListener('contextmenu', event => {
+  event.preventDefault();
+});
+
+// Запрет системного перетаскивания картинок (ghost image).
+// Перетаскивание камеры Three.js при этом не блокируется.
+document.addEventListener('dragstart', event => {
+  if (event.target.closest?.('#officeImageMenu, #emotionLayer, #scene')) {
+    event.preventDefault();
+  }
+});
+
+// Блокируем выделение только в интерактивной части игры,
+// сохраняя копирование текста в информационных окнах и полях ввода.
+document.addEventListener('selectstart', event => {
+  if (event.target.closest?.('#officeImageMenu, #emotionLayer, #scene')) {
+    event.preventDefault();
+  }
+});
+
+// ===== ГРАФИЧЕСКОЕ МЕНЮ: сохраняет оригинальные обработчики 3D-игры =====
+const imageMenuItems=[
+ {name:'Компьютер',file:'Офисные UI-плитки с иконками_edited (1).png',icon:'▣',description:'Рабочие компьютеры, приложения и документы.',actions:[['Открыть меню сотрудников','staff'],['Задания','tasks']]},
+ {name:'Сотрудники',file:'Офисные UI-плитки с иконками_edited (2).png',icon:'♟',description:'Управление сотрудниками, задачами и эмоциями.',actions:[['Сотрудники','staff'],['Добавить сотрудника','add']]},
+ {name:'Помещения',file:'Офисные UI-плитки с иконками_edited (3).png',icon:'▤',description:'Осмотр 3D-офиса и перемещение камеры.',actions:[['Камера','camera'],['Главная','home']]},
+ {name:'Задания',file:'Офисные UI-плитки с иконками_edited (4).png',icon:'★',description:'Задачи и достижения сотрудников.',actions:[['Открыть задания','tasks'],['Сохранить','save']]},
+ {name:'Склад',file:'Офисные UI-плитки с иконками_edited (5).png',icon:'▥',description:'Склад и оборудование офиса. Для склада отдельная игровая механика пока не задана.',actions:[['Главная','home'],['Сохранить','save']]},
+ {name:'Настройки',file:'Офисные UI-плитки с иконками_edited.png',icon:'⚙',description:'Настройки игры, управление камерой и сохранениями.',actions:[['Настройки','settings'],['Камера','camera']]}
+];
+let menuAudioContext=null,menuBuffer=null,menuCurrent=null,menuMute=false,menuCustomImages=[];
+function menuContext(){return menuAudioContext ||= new (window.AudioContext||window.webkitAudioContext)()}
+function menuStop(){if(menuCurrent){try{menuCurrent.stop()}catch{}menuCurrent.disconnect();menuCurrent=null}}
+function menuPlay(){menuStop();if(menuMute)return;const ac=menuContext();if(ac.state==='suspended')ac.resume();const gain=ac.createGain();gain.gain.value=Number(document.getElementById('menuVolume').value)/100;gain.connect(ac.destination);if(menuBuffer){const src=ac.createBufferSource();src.buffer=menuBuffer;src.connect(gain);menuCurrent=src;src.onended=()=>{if(menuCurrent===src)menuCurrent=null};src.start();return}const osc=ac.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(630,ac.currentTime);osc.frequency.exponentialRampToValueAtTime(380,ac.currentTime+.065);gain.gain.setValueAtTime(.0001,ac.currentTime);gain.gain.exponentialRampToValueAtTime(.12,ac.currentTime+.008);gain.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+.075);osc.connect(gain);menuCurrent=osc;osc.start();osc.stop(ac.currentTime+.08)}
+async function menuDecode(file){try{menuBuffer=await menuContext().decodeAudioData(await file.arrayBuffer())}catch(e){console.warn('Невозможно декодировать звук:',e)}}
+async function menuAutoSound(){for(const path of ['./Аудио_klik/00000014_cut (1).wav','./00000014_cut (1).wav','./Аудио_klik/click.wav','./click.wav']){try{const r=await fetch(path);if(!r.ok)continue;const b=await r.arrayBuffer();menuBuffer=await menuContext().decodeAudioData(b);return}catch{}}console.info('WAV не найден; используется встроенный короткий звук')}
+
+// =================================================================
+// 10 / IMAGE MENU — будущий image-menu.js
+// =================================================================
+function imageMenuRender(){const host=document.getElementById('officeImageTiles');host.replaceChildren();imageMenuItems.forEach((item,i)=>{const button=document.createElement('button');button.className='office-image-tile';button.title=item.name;button.setAttribute('aria-label',item.name);const img=document.createElement('img');img.alt='';const fallback=document.createElement('span');fallback.textContent=item.icon;img.onload=()=>fallback.hidden=true;img.onerror=()=>{img.hidden=true;fallback.hidden=false};img.src=menuCustomImages[i]||item.file;button.append(img,fallback);button.addEventListener('click',()=>{menuPlay();host.querySelectorAll('button').forEach(b=>b.classList.remove('active'));button.classList.add('active');document.getElementById('imageInfoPanel').hidden=false;document.getElementById('imageInfoTitle').textContent=item.name;const body=document.getElementById('imageInfoBody');body.replaceChildren();const p=document.createElement('p');p.textContent=item.description;const actions=document.createElement('div');actions.className='panel-actions';item.actions.forEach(([label,action])=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>{menuPlay();document.getElementById('imageInfoPanel').hidden=true;document.querySelector(`.toolbar [data-action="${action}"]`)?.click()};actions.append(b)});body.append(p,actions)});host.append(button)})}
+document.getElementById('imageInfoClose').onclick=()=>{menuPlay();document.getElementById('imageInfoPanel').hidden=true};
+document.getElementById('imageMenuUpload').onclick=()=>document.getElementById('imageMenuFiles').click();
+document.getElementById('imageMenuFiles').onchange=e=>{menuCustomImages.forEach(u=>URL.revokeObjectURL(u));menuCustomImages=[...e.target.files].filter(f=>f.type.startsWith('image/')).slice(0,6).map(f=>URL.createObjectURL(f));imageMenuRender()};
+document.getElementById('menuSoundToggle').onclick=e=>{menuMute=!menuMute;menuStop();e.currentTarget.textContent=menuMute?'♪̸':'♫';e.currentTarget.title=menuMute?'Включить звук':'Выключить звук'};
+// Двойной щелчок по кнопке звука позволяет заменить WAV вручную.
+document.getElementById('menuSoundToggle').ondblclick=()=>document.getElementById('menuSoundFile').click();
+document.getElementById('menuSoundFile').onchange=e=>{if(e.target.files[0])menuDecode(e.target.files[0])};
+imageMenuRender();menuAutoSound();
+// Процент связан с фактическими этапами загрузки 3D, а не с таймером.
+window.addEventListener('office-loading',e=>{const v=Math.max(0,Math.min(100,Number(e.detail.value)||0));document.getElementById('integratedLoadFill').style.width=v+'%';document.getElementById('integratedLoadPercent').textContent=v+'%';document.getElementById('integratedLoadDetail').textContent=e.detail.text;document.getElementById('integratedLoadTitle').textContent=v===100?'Офис готов':'Подготовка 3D-офиса...'});
+window.addEventListener('office-ready',()=>setTimeout(()=>document.getElementById('integratedLoader').classList.add('finished'),350));
+window.addEventListener('office-error',e=>{document.getElementById('integratedLoadTitle').textContent='Ошибка загрузки';document.getElementById('integratedLoadDetail').textContent=e.detail;document.getElementById('integratedRetry').hidden=false});
+document.getElementById('integratedRetry').onclick=()=>location.reload();
+
+</script>
+
+</body>
+</html>
