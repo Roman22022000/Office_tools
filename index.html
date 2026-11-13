@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#142234">
 
   <title>SOSISKA OFFICE STUDIO</title>
+  <!-- Внимание: проверка на клиенте не заменяет серверную валидацию. -->
 
   <!-- Основной файл оформления -->
   <style>
@@ -430,7 +431,7 @@ button:disabled {
 .image-menu-tools{display:flex;align-items:center;gap:3px;margin-top:6px}.image-menu-tools button{padding:2px 5px;font-size:13px;border-radius:5px}.image-menu-tools label{min-width:0;flex:1}.image-menu-tools input{width:100%;accent-color:#dfb16b}
 .image-info-panel{position:absolute;z-index:6;left:136px;top:12px;width:min(340px,calc(100% - 145px));max-height:75%;overflow:auto;border:0;border-radius:11px;background:#1b2d41f5;box-shadow:none;padding:12px;color:#edf4fc}
 .image-info-panel[hidden]{display:none}.image-info-panel header{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #435b74;padding-bottom:7px}.image-info-panel header button{padding:3px 9px}.image-info-panel p{font-size:13px;line-height:1.55;color:#b7cde0}.image-info-panel .panel-actions{display:flex;gap:6px;flex-wrap:wrap}.image-info-panel .panel-actions button{font-size:12px;padding:7px}
-#integratedLoader{position:fixed;inset:0;z-index:100;background:#111a26 url('Переезд офиса на закате.png') center/cover no-repeat;display:flex;align-items:flex-end;justify-content:center;padding:25px;transition:opacity .45s,visibility .45s}
+#integratedLoader{position:fixed;inset:0;z-index:100;background:#111a26 center/cover no-repeat;display:flex;align-items:flex-end;justify-content:center;padding:25px;transition:opacity .45s,visibility .45s}
 #integratedLoader:before{content:'';position:absolute;inset:0;background:linear-gradient(transparent 35%,#08101ce0)}#integratedLoader.finished{opacity:0;visibility:hidden;pointer-events:none}
 .integrated-load-card{position:relative;width:min(740px,100%);padding:20px;border-radius:15px;background:#122034dc;border:0;backdrop-filter:blur(10px)}
 #integratedLoadTitle{font-size:21px;font-weight:700;margin-bottom:13px}.integrated-load-track{height:16px;border:1px solid #60778b;background:#101b2b;border-radius:12px;overflow:hidden}#integratedLoadFill{height:100%;width:0;background:linear-gradient(90deg,#e98a22,#ffcb55);transition:width .2s}.integrated-load-foot{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:12px;color:#b9cce0}
@@ -705,6 +706,52 @@ button:disabled {
 // =================================================================
 // 01 / COLLISION + PATHFINDING — будущий collision.js
 // =================================================================
+
+// =====================================================================
+// 01 / INPUT SECURITY — future js/input-validation.js
+// Client-side validation is UX and defense-in-depth, NOT server security.
+// Do not treat localStorage or imported JSON as trusted server input.
+// =====================================================================
+const INPUT_RULES = Object.freeze({
+  personName: {max:40, pattern:/^[\p{L}\p{M}0-9 .'-]+$/u},
+  personRole: {max:50, pattern:/^[\p{L}\p{M}0-9 .()'/-]+$/u},
+  personDepartment: {max:50, pattern:/^[\p{L}\p{M}0-9 .()'/-]+$/u},
+  taskTitle: {max:60, pattern:/^[\p{L}\p{M}0-9 .,:;!?()№+\-]+$/u},
+  taskPrompt: {max:500, multiline:true}
+});
+function cleanUserText(value, rule = {max:60}) {
+  const max = rule.max || 60;
+  let text = String(value ?? '').normalize('NFC')
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+    .replace(/[<>]/g, '')
+    .replace(rule.multiline ? /[ \t]{2,}/g : /\s+/g, ' ')
+    .slice(0,max);
+  if (!rule.multiline) text = text.replace(/[^\p{L}\p{M}0-9 .,:;!?()№+'\/-]/gu,'');
+  return text;
+}
+function validatedText(id, {required = false} = {}) {
+  const el = document.getElementById(id);
+  if (!el) throw new Error('Поле не найдено: ' + id);
+  const rule = INPUT_RULES[id] || {max:60};
+  const cleaned = cleanUserText(el.value, rule).trim();
+  if (required && !cleaned) throw new Error('Заполните поле: ' + (el.labels?.[0]?.textContent || id));
+  if (rule.pattern && cleaned && !rule.pattern.test(cleaned)) throw new Error('Недопустимый формат: ' + id);
+  if (cleaned !== el.value.trim()) el.value = cleaned;
+  return cleaned;
+}
+// Input event works for keyboard, paste and mobile text entry.
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (!(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement)) return;
+  if (el.isComposing || !INPUT_RULES[el.id]) return;
+  const cleaned = cleanUserText(el.value, INPUT_RULES[el.id]);
+  if (cleaned !== el.value) el.value = cleaned;
+});
+document.addEventListener('compositionend', e => {
+  const el=e.target;
+  if (INPUT_RULES[el?.id]) el.value=cleanUserText(el.value,INPUT_RULES[el.id]);
+});
+
 class OfficeNavigation {
   constructor() {
     this.bounds = {
@@ -1148,7 +1195,7 @@ function toast(message) {
 }
 
 function progress(value, text) {
-  window.dispatchEvent(new CustomEvent("office-loading",{detail:{value,text}}));
+  window.dispatchEvent(new CustomEvent("office-loading",{detail:{value:Math.round(75+value*0.25),text}}));
   $("progressBar").style.width = value + "%";
   $("loadingText").textContent = text;
 }
@@ -1183,7 +1230,7 @@ function field(label, id, value = "") {
   return `
     <div class="field">
       <label for="${id}">${safe(label)}</label>
-      <input id="${id}" maxlength="80"
+      <input id="${id}" type="text" maxlength="60" minlength="1" autocomplete="off" spellcheck="false" inputmode="text"
              value="${safe(value)}">
     </div>
   `;
@@ -1751,7 +1798,7 @@ async function start(mode) {
   $("continueGame").disabled = true;
 
   try {
-    await initialize3D();
+    await bootOffice();
 
     if (mode === "new") {
       newGame();
@@ -1978,13 +2025,13 @@ function employeeCard(person) {
 
   $("pSave").onclick = () => {
     person.name =
-      $("personName").value.trim() || person.name;
+      validatedText("personName") || person.name;
 
     person.role =
-      $("personRole").value.trim() || person.role;
+      validatedText("personRole") || person.role;
 
     person.department =
-      $("personDepartment").value.trim() || person.department;
+      validatedText("personDepartment") || person.department;
 
     save();
     employeeCard(person);
@@ -2130,7 +2177,7 @@ function taskEditor(person) {
 
     <div class="field">
       <label>Описание / промпт</label>
-      <textarea id="taskPrompt" maxlength="1500"></textarea>
+      <textarea id="taskPrompt" maxlength="500" spellcheck="false" placeholder="Текст задания (до 500 символов)"></textarea>
     </div>
 
     <div class="actions">
@@ -2140,7 +2187,7 @@ function taskEditor(person) {
   `);
 
   $("createTask").onclick = () => {
-    const title = $("taskTitle").value.trim();
+    const title = validatedText("taskTitle");
 
     if (!title) {
       toast("Введите название");
@@ -2156,7 +2203,7 @@ function taskEditor(person) {
       id: uid(),
       title,
       type: $("taskType").value,
-      prompt: $("taskPrompt").value,
+      prompt: validatedText("taskPrompt"),
       status: "Создано"
     };
 
@@ -2560,7 +2607,9 @@ function settingsMenu() {
     if (!file) return;
 
     try {
+      if (file.size > 1024 * 1024 || !/\.json$/i.test(file.name)) throw new Error("Только JSON до 1 МБ");
       const data = JSON.parse(await file.text());
+      if (typeof data !== "object" || !data || data.employees?.length > 30) throw new Error("Неверные данные сотрудников");
 
       if (!Array.isArray(data.employees)) {
         throw new Error("Нет массива employees");
@@ -2805,16 +2854,71 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-// Автозагрузка 3D и моделей сразу после открытия страницы.
-// Кнопки начала игры продолжают работать и ждут завершения загрузки.
-window.addEventListener("DOMContentLoaded", () => {
-  initialize3D().catch(error => {
-    console.error("Ошибка предварительной загрузки", error);
-    progress(0, "Ошибка загрузки: " + error.message);
-    window.dispatchEvent(new CustomEvent("office-error",{detail:error.message}));
+// =====================================================================
+// 09 / ASSET PIPELINE — future js/asset-loader.js
+// ORDER: splash -> menu PNG -> emotion PNG -> audio -> Three.js + GLB.
+// Missing optional images/audio show fallbacks; missing GLB uses demo models.
+// Progress represents completed loading phases, not a fake countdown.
+// =====================================================================
+const ASSET_PATHS = {
+  splash: 'Переезд офиса на закате.png',
+  menu: [
+    'Офисные UI-плитки с иконками_edited (1).png',
+    'Офисные UI-плитки с иконками_edited (2).png',
+    'Офисные UI-плитки с иконками_edited (3).png',
+    'Офисные UI-плитки с иконками_edited (4).png',
+    'Офисные UI-плитки с иконками_edited (5).png',
+    'Офисные UI-плитки с иконками_edited.png'
+  ],
+  emotions: [
+    './Emotion/file_00000000617c8210848eebe7ba194f3d_edited (1).png',
+    './Emotion/file_00000000617c8210848eebe7ba194f3d_edited (2).png',
+    './Emotion/file_00000000617c8210848eebe7ba194f3d_edited (3).png',
+    './Emotion/file_00000000617c8210848eebe7ba194f3d_edited.png'
+  ]
+};
+function assetProgress(value, text) {
+  window.dispatchEvent(new CustomEvent('office-loading', {detail:{value,text}}));
+}
+async function preloadImage(path) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = async () => { try { await img.decode?.(); } catch {} resolve(true); };
+    img.onerror = () => { console.warn('Изображение не найдено:',path); resolve(false); };
+    img.src = path;
   });
-});
-
+}
+let assetBootPromise = null;
+function bootOffice() {
+  if (assetBootPromise) return assetBootPromise;
+  assetBootPromise = (async () => {
+    const warnings=[];
+    assetProgress(0,'Загрузка заставки');
+    if (!await preloadImage(ASSET_PATHS.splash)) warnings.push('фон');
+    else document.getElementById('integratedLoader').style.backgroundImage = `url("${ASSET_PATHS.splash}")`;
+    assetProgress(12,'Загрузка графических кнопок');
+    for (let i=0;i<ASSET_PATHS.menu.length;i++) {
+      if (!await preloadImage(ASSET_PATHS.menu[i])) warnings.push('кнопка '+(i+1));
+      assetProgress(12+Math.round((i+1)*23/ASSET_PATHS.menu.length),'Кнопки '+(i+1)+'/'+ASSET_PATHS.menu.length);
+    }
+    for (let i=0;i<ASSET_PATHS.emotions.length;i++) {
+      if (!await preloadImage(ASSET_PATHS.emotions[i])) warnings.push('эмоция '+(i+1));
+      assetProgress(35+Math.round((i+1)*20/ASSET_PATHS.emotions.length),'Эмоции '+(i+1)+'/'+ASSET_PATHS.emotions.length);
+    }
+    imageMenuRender();
+    assetProgress(57,'Загрузка аудио');
+    await menuAutoSound();
+    assetProgress(75,'Загрузка 3D-движка и моделей');
+    await initialize3D();
+    if (warnings.length) console.warn('Необязательные ресурсы отсутствуют:',warnings.join(', '));
+  })().catch(error => {
+    console.error('Ошибка загрузки игры:',error);
+    window.dispatchEvent(new CustomEvent('office-error',{detail:String(error.message||error)}));
+    throw error;
+  });
+  return assetBootPromise;
+}
+window.addEventListener('DOMContentLoaded',()=>{bootOffice().catch(()=>{});});
 
 
 // ==============================================================
@@ -2865,12 +2969,12 @@ async function menuAutoSound(){for(const path of ['./Аудио_klik/00000014_cu
 function imageMenuRender(){const host=document.getElementById('officeImageTiles');host.replaceChildren();imageMenuItems.forEach((item,i)=>{const button=document.createElement('button');button.className='office-image-tile';button.title=item.name;button.setAttribute('aria-label',item.name);const img=document.createElement('img');img.alt='';const fallback=document.createElement('span');fallback.textContent=item.icon;img.onload=()=>fallback.hidden=true;img.onerror=()=>{img.hidden=true;fallback.hidden=false};img.src=menuCustomImages[i]||item.file;button.append(img,fallback);button.addEventListener('click',()=>{menuPlay();host.querySelectorAll('button').forEach(b=>b.classList.remove('active'));button.classList.add('active');document.getElementById('imageInfoPanel').hidden=false;document.getElementById('imageInfoTitle').textContent=item.name;const body=document.getElementById('imageInfoBody');body.replaceChildren();const p=document.createElement('p');p.textContent=item.description;const actions=document.createElement('div');actions.className='panel-actions';item.actions.forEach(([label,action])=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>{menuPlay();document.getElementById('imageInfoPanel').hidden=true;document.querySelector(`.toolbar [data-action="${action}"]`)?.click()};actions.append(b)});body.append(p,actions)});host.append(button)})}
 document.getElementById('imageInfoClose').onclick=()=>{menuPlay();document.getElementById('imageInfoPanel').hidden=true};
 document.getElementById('imageMenuUpload').onclick=()=>document.getElementById('imageMenuFiles').click();
-document.getElementById('imageMenuFiles').onchange=e=>{menuCustomImages.forEach(u=>URL.revokeObjectURL(u));menuCustomImages=[...e.target.files].filter(f=>f.type.startsWith('image/')).slice(0,6).map(f=>URL.createObjectURL(f));imageMenuRender()};
+document.getElementById('imageMenuFiles').onchange=e=>{menuCustomImages.forEach(u=>URL.revokeObjectURL(u));menuCustomImages=[...e.target.files].filter(f=>['image/png','image/jpeg','image/webp'].includes(f.type)&&f.size<=3*1024*1024).slice(0,6).map(f=>URL.createObjectURL(f));imageMenuRender()};
 document.getElementById('menuSoundToggle').onclick=e=>{menuMute=!menuMute;menuStop();e.currentTarget.textContent=menuMute?'♪̸':'♫';e.currentTarget.title=menuMute?'Включить звук':'Выключить звук'};
 // Двойной щелчок по кнопке звука позволяет заменить WAV вручную.
 document.getElementById('menuSoundToggle').ondblclick=()=>document.getElementById('menuSoundFile').click();
-document.getElementById('menuSoundFile').onchange=e=>{if(e.target.files[0])menuDecode(e.target.files[0])};
-imageMenuRender();menuAutoSound();
+document.getElementById('menuSoundFile').onchange=e=>{if(e.target.files[0] && e.target.files[0].size<=5*1024*1024 && /^(audio\/|.*\.wav$)/i.test(e.target.files[0].type || e.target.files[0].name))menuDecode(e.target.files[0]);else toast("Аудио до 5 МБ")};
+// Menu is rendered after the preload phase, not before it.
 // Процент связан с фактическими этапами загрузки 3D, а не с таймером.
 window.addEventListener('office-loading',e=>{const v=Math.max(0,Math.min(100,Number(e.detail.value)||0));document.getElementById('integratedLoadFill').style.width=v+'%';document.getElementById('integratedLoadPercent').textContent=v+'%';document.getElementById('integratedLoadDetail').textContent=e.detail.text;document.getElementById('integratedLoadTitle').textContent=v===100?'Офис готов':'Подготовка 3D-офиса...'});
 window.addEventListener('office-ready',()=>setTimeout(()=>document.getElementById('integratedLoader').classList.add('finished'),350));
