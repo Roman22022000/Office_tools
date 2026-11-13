@@ -2337,31 +2337,10 @@ function emotionMenu(person) {
 
 // Четыре изображения из папки Emotion. Названия файлов можно менять здесь.
 const EMOTION_ICONS = [
-  {
-    name: "Информация",
-    file: "file_00000000617c8210848eebe7ba194f3d_edited (1).png"
-  },
-  {
-    name: "Внимание",
-    file: "file_00000000617c8210848eebe7ba194f3d_edited (2).png"
-  },
-  {
-    name: "Переживание",
-    file: "file_00000000617c8210848eebe7ba194f3d_edited (3).png"
-  },
-  {
-    name: "Достижение",
-    file: "file_00000000617c8210848eebe7ba194f3d_edited.png"
-  }
-];
-
-// Путь должен точно совпадать с папкой на GitHub
-const EMOTION_FOLDER = "./emotion/";
-
-function emotionImagePath(emotion) {
-  return EMOTION_FOLDER + emotion.file;
-}
-
+  {name:'Информация', file:'file_00000000617c8210848eebe7ba194f3d_edited (1).png', description:'Сведения о сотруднике: должность, отдел, задачи и текущее состояние.'},
+  {name:'Внимание', file:'file_00000000617c8210848eebe7ba194f3d_edited (2).png', description:'Важное событие или предупреждение: проверьте задачи и маршрут сотрудника.'},
+  {name:'Переживание', file:'file_00000000617c8210848eebe7ba194f3d_edited (3).png', description:'Сотрудник испытывает напряжение или усталость. Проверьте его текущую работу.'},
+  {name:'Достижение', file:'file_00000000617c8210848eebe7ba194f3d_edited.png', description:'Положительное событие: успех, завершение работы или достижение.'}
 ];
 const EMOTION_MIN_MS = 10000;
 const EMOTION_MAX_MS = 15000;
@@ -2384,7 +2363,7 @@ function showEmotionIcon(person, emotion = EMOTION_ICONS[Math.floor(Math.random(
   button.setAttribute('aria-label', emotion.name + ': ' + person.name);
   const img = document.createElement('img');
   img.alt = emotion.name;
-  img.src = '.emotion/' + emotion.file;
+  img.src = './Emotion/' + emotion.file;
   img.onerror = () => { img.onerror = null; img.src = './Emotion/' + ['info.png','alert.png','stress.png','star.png'][EMOTION_ICONS.indexOf(emotion)] ; };
   button.append(img);
   button.addEventListener('click', event => {
@@ -2982,7 +2961,7 @@ function menuContext(){return menuAudioContext ||= new (window.AudioContext||win
 function menuStop(){if(menuCurrent){try{menuCurrent.stop()}catch{}menuCurrent.disconnect();menuCurrent=null}}
 function menuPlay(){menuStop();if(menuMute)return;const ac=menuContext();if(ac.state==='suspended')ac.resume();const gain=ac.createGain();gain.gain.value=Number(document.getElementById('menuVolume').value)/100;gain.connect(ac.destination);if(menuBuffer){const src=ac.createBufferSource();src.buffer=menuBuffer;src.connect(gain);menuCurrent=src;src.onended=()=>{if(menuCurrent===src)menuCurrent=null};src.start();return}const osc=ac.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(630,ac.currentTime);osc.frequency.exponentialRampToValueAtTime(380,ac.currentTime+.065);gain.gain.setValueAtTime(.0001,ac.currentTime);gain.gain.exponentialRampToValueAtTime(.12,ac.currentTime+.008);gain.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+.075);osc.connect(gain);menuCurrent=osc;osc.start();osc.stop(ac.currentTime+.08)}
 async function menuDecode(file){try{menuBuffer=await menuContext().decodeAudioData(await file.arrayBuffer())}catch(e){console.warn('Невозможно декодировать звук:',e)}}
-async function menuAutoSound(){for(const path of ['./audio_klick/00000014_cut (1).wav','./00000014_cut (1).wav','./Аудио_klik/click.wav','./click.wav']){try{const r=await fetch(path);if(!r.ok)continue;const b=await r.arrayBuffer();menuBuffer=await menuContext().decodeAudioData(b);return}catch{}}console.info('WAV не найден; используется встроенный короткий звук')}
+async function menuAutoSound(){for(const path of ['./Аудио_klik/00000014_cut (1).wav','./00000014_cut (1).wav','./Аудио_klik/click.wav','./click.wav']){try{const r=await fetch(path);if(!r.ok)continue;const b=await r.arrayBuffer();menuBuffer=await menuContext().decodeAudioData(b);return}catch{}}console.info('WAV не найден; используется встроенный короткий звук')}
 
 // =================================================================
 // 10 / IMAGE MENU — будущий image-menu.js
