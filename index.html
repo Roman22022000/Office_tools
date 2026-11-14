@@ -2607,7 +2607,7 @@ function emotionMenu(person) {
   $("emotionBack").onclick = () => employeeCard(person);
 }
 
-// Четыре изображения из папки Emotion. Названия файлов можно менять здесь.
+// Четыре изображения из папки emotion (регистр важен на GitHub Pages). Названия файлов можно менять здесь.
 const EMOTION_ICONS = [
   {name:'Информация', file:'emo1.png', description:'Сведения о сотруднике: должность, отдел, задачи и текущее состояние.'},
   {name:'Внимание', file:'emo2.png', description:'Важное событие или предупреждение: проверьте задачи и маршрут сотрудника.'},
@@ -2639,8 +2639,8 @@ function showEmotionIcon(person, emotion = EMOTION_ICONS[Math.floor(Math.random(
   button.setAttribute('aria-label', emotion.name + ': ' + person.name);
   const img = document.createElement('img');
   img.alt = emotion.name;
-  img.src = './Emotion/' + emotion.file;
-  img.onerror = () => { img.onerror = null; img.src = './Emotion/' + ['info.png','alert.png','stress.png','star.png'][EMOTION_ICONS.indexOf(emotion)] ; };
+  img.src = './emotion/' + emotion.file;
+  img.onerror = () => { console.error('Не удалось загрузить эмоцию:', img.src); img.onerror = null; img.removeAttribute('src'); img.alt = emotion.name; };
   button.append(img);
   button.addEventListener('click', event => {
     event.stopPropagation();
