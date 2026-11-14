@@ -1,0 +1,17 @@
+
+
+/* V9 / SHOP: готовые карточки из папки shop, надписи и кнопки поверх PNG */
+.market-grid{grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:12px}
+.market-card.market-art-card{isolation:isolate;aspect-ratio:0.55;min-height:300px;padding:0;border:0;border-radius:14px;background:#102444;overflow:hidden;box-shadow:none;display:block}
+.market-art-card .market-art{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;z-index:0}
+.market-art-card .market-art-name{position:absolute;z-index:2;top:5%;left:8%;right:8%;margin:0;text-align:center;font:700 clamp(12px,1.1vw,19px)/1.12 'Roboto Condensed',Arial,sans-serif;color:#fff;text-shadow:0 2px 5px #08172c,0 0 3px #08172c;overflow-wrap:anywhere}
+.market-art-card .market-art-price{position:absolute;z-index:2;left:15%;right:15%;bottom:22%;height:10%;display:flex;align-items:center;justify-content:center;gap:5px;padding:2px 6px;border-radius:9px;color:#fff;font:700 clamp(14px,1.35vw,23px)/1 'Russo One',Arial,sans-serif;text-shadow:0 2px 4px #000;white-space:nowrap}
+.market-art-card .market-art-price::before{content:'';position:absolute;inset:0;z-index:-1;border:1px solid #64b8ffb8;border-radius:9px;background:linear-gradient(110deg,#102e57db,#1a3968db)}
+.market-art-card .market-art-price .market-coin{font-size:.85em;margin:0}
+.market-art-card .market-art-buy{position:absolute;z-index:3;bottom:5%;left:15%;width:70%;height:12%;border:0;padding:0;background:transparent;display:grid;place-items:center;border-radius:10px;overflow:hidden}
+.market-art-card .market-art-buy img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
+.market-art-card .market-art-buy span{position:relative;z-index:1;font:700 clamp(12px,1.15vw,19px) 'Roboto Condensed',Arial,sans-serif;color:#1e1809;text-shadow:0 1px 1px #fff7}
+.market-art-card .market-art-buy:hover{filter:brightness(1.13)}
+.market-art-card .market-art-buy:disabled{filter:grayscale(1);opacity:.6}
+.market-art-card .market-art-buy:focus-visible{outline:2px solid #fff;outline-offset:-2px}
+@media(max-width:600px){.market-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.market-card.market-art-card{min-height:0}.market-art-card .market-art-name{font-size:clamp(12px,3vw,17px)}.market-art-card .market-art-price{font-size:clamp(13px,3.4vw,19px)}.market-art-card .market-art-buy span{font-size:clamp(12px,3vw,17px)}}

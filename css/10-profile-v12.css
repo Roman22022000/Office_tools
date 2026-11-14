@@ -1,0 +1,21 @@
+
+/* Профиль: независимые, свёрнутые разделы */
+.profile-settings{gap:7px}
+.profile-settings .profile-group{border:1px solid #49627a;border-radius:12px;background:#172c42;overflow:hidden}
+.profile-group>summary{list-style:none;cursor:pointer;padding:14px 13px;display:flex;align-items:center;gap:11px;font-weight:700;color:#e6eef7;user-select:none}
+.profile-group>summary::-webkit-details-marker{display:none}
+.profile-group>summary i{font-size:22px;color:var(--active-accent,#f5c78d)}
+.profile-group>summary::after{content:'⌄';margin-left:auto;font-size:19px;color:#9db4c9}
+.profile-group[open]>summary::after{content:'⌃'}
+.profile-group> :not(summary){margin:8px 12px 12px}
+/* Исправление магазинных кнопок: текст поверх кнопки без дублированного рисунка корзины */
+.market-art-card .market-art-buy{background:linear-gradient(#ffe68d,#f4a51e);border:1px solid #ffcf61;box-shadow:none}
+.market-art-card .market-art-buy span{display:flex;gap:5px;align-items:center;justify-content:center;color:#241c12;text-shadow:none;font-size:clamp(13px,1.2vw,19px)}
+.market-art-card .market-art-buy img{display:none!important}
+.market-card,.market-art-card,.market-buy,.market-art-buy{box-shadow:none!important}
+/* Выбор без синего системного выделения; клавиатурный фокус остаётся доступным */
+button,img,.market-card,.profile-group>summary{-webkit-tap-highlight-color:transparent;-webkit-user-drag:none}
+button:focus:not(:focus-visible){outline:none}
+button:focus-visible,.profile-group>summary:focus-visible{outline:2px solid var(--active-accent,#f5c78d);outline-offset:2px}
+.toolbar [data-action="settings"]{display:none!important}
+@media(max-width:600px){.profile-group>summary{padding:12px}.market-art-card .market-art-buy span{font-size:13px}}

@@ -1,0 +1,30 @@
+
+/* UI вынесен в изолированный слой — готов к assets/css/ui.css */
+.scene-help{display:none!important}
+.overlay{z-index:1000;padding:12px 12px max(12px,env(safe-area-inset-bottom))}
+.overlay .dialog{max-height:calc(100dvh - 24px);min-height:0}
+.overlay #modalBody{min-height:0;overflow:auto;overscroll-behavior:contain;padding-bottom:calc(22px + env(safe-area-inset-bottom));scrollbar-color:#6589aa #16293e;scrollbar-width:thin}
+.overlay #modalBody::-webkit-scrollbar,.image-info-panel::-webkit-scrollbar{width:8px}
+.overlay #modalBody::-webkit-scrollbar-thumb,.image-info-panel::-webkit-scrollbar-thumb{background:#547a9d;border-radius:8px;border:2px solid #1a2c40}
+.overlay #modalBody::-webkit-scrollbar-track,.image-info-panel::-webkit-scrollbar-track{background:#16293e}
+.image-info-panel{max-height:calc(100dvh - 100px);scrollbar-color:#6589aa #16293e;scrollbar-width:thin}
+.hero-sticker-wrap{position:relative;margin:14px 10px 26px;isolation:isolate;overflow:visible}
+.hero-sticker-wrap .info-hero-art{overflow:hidden;margin:0;min-height:180px}
+.hero-sticker-wrap .sticker-field{position:absolute;inset:-20px -17px -25px;height:auto;overflow:visible;margin:0;z-index:2}
+.hero-sticker-wrap .floating-sticker{filter:none!important;max-width:38px;max-height:38px}
+.board-tools{padding:8px;background:#122a44;border:1px solid #3e5d7b;border-radius:12px}
+.board-tools button{display:inline-flex;gap:5px;align-items:center;justify-content:center;min-height:39px;border:1px solid #436582}
+.board-tools button i{font-size:19px;color:#b7d9f5}
+.board-tools .board-tool.active{background:#304f70;outline:1px solid var(--game-accent,#f5c78d)}
+.board-tools input[type=color]{width:43px;height:36px;background:#20374d;border:0;border-radius:8px}
+#boardEditor{border:3px solid #496783;max-height:min(50vh,560px)}
+/* ==========================================
+   SOSISKA OFFICE — ИГРОВОЙ КУРСОР
+   ========================================== */
+
+#scene,
+.office-image-tile,
+.toolbar button {
+    cursor: url('../kursor/kursor.png') 8 4, auto;
+}
+@media(max-width:600px){.overlay{padding:5px}.overlay .dialog{max-height:calc(100dvh - 10px)}.hero-sticker-wrap{margin:14px 8px 24px}.board-tools{gap:4px}.board-tools button span{display:none}}

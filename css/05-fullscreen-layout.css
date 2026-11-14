@@ -1,0 +1,43 @@
+
+/* ============================================================
+   V7 / layout.css — сцена занимает весь экран, меню поверх неё
+   ============================================================ */
+html,body,#app{width:100%;height:100%;height:100dvh;overflow:hidden}
+#app{position:relative;display:block}
+#app>.topbar{display:none!important}
+#viewport{position:absolute!important;inset:0!important;width:100%;height:100%!important;min-height:0!important}
+#scene{width:100%;height:100%;display:block}
+.scene-help{bottom:92px}
+#officeImageMenu{top:12px}
+/* Верхнее меню не забирает место у 3D-сцены */
+.more-wrap{position:absolute;z-index:12;right:14px;top:14px}
+.more-button{width:45px;height:45px;border:1px solid #52749c;border-radius:15px;background:#122640e8;display:grid;place-items:center;backdrop-filter:blur(10px);font-size:26px}
+.more-dropdown{position:absolute;right:0;top:52px;min-width:190px;padding:7px;border-radius:15px;background:#14263df7;border:1px solid #47678c;box-shadow:0 12px 30px #0007}
+.more-dropdown[hidden]{display:none}
+.more-dropdown button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:transparent;padding:11px;font-size:14px}
+.more-dropdown button:hover{background:#294664}
+.more-dropdown i{font-size:21px;color:#e6bd79}
+/* Нижнее меню поверх сцены: профиль всегда закреплён слева */
+#app>.toolbar{position:absolute!important;z-index:11;bottom:max(8px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(920px,calc(100% - 16px));height:72px;min-height:0;margin:0!important;padding:5px!important;display:flex;justify-content:flex-start;gap:5px;overflow:hidden!important;background:#13253ceF;border:1px solid #496b91;border-radius:27px;backdrop-filter:blur(14px)}
+.toolbar .profile-fixed{position:relative;flex:0 0 76px;min-width:76px!important;height:100%;border-right:1px solid #49617b;border-radius:21px;background:#27405d!important;color:#f7d58e;z-index:2}
+.toolbar .profile-fixed i{color:#f3c779!important}
+.toolbar-rail{flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x}
+.toolbar-rail::-webkit-scrollbar{display:none}
+.toolbar-loop{display:flex;align-items:center;gap:4px;height:100%;width:max-content}
+.toolbar-loop>button{flex:0 0 82px;height:100%;min-width:82px!important;white-space:nowrap}
+.toolbar-loop>button i{font-size:23px}
+#buildHud{bottom:90px!important}
+/* Центрированные информационные окна */
+.info-dialog{width:min(520px,calc(100vw - 24px));max-height:min(90dvh,780px)}
+.info-dialog #modalBody{padding:18px;overflow-y:auto}
+.info-hero{display:flex;align-items:center;justify-content:center;min-height:130px;margin-bottom:13px;border-radius:16px;background:radial-gradient(ellipse at 50% 100%,#34649a 0%,#152a49 60%,#101c32 100%);border:1px solid #42618c}
+.info-hero i{font-size:78px;color:#ffcc70;filter:drop-shadow(0 7px 12px #0006)}
+.info-copy{font-size:14px;line-height:1.65;color:#c5d6e8}
+.info-copy h3{font-size:17px;color:white;margin:10px 0 5px}
+.support-tags{display:flex;flex-wrap:wrap;gap:7px;margin:9px 0}
+.support-tags button{font-size:12px;padding:7px 9px;border:1px solid #46668d;background:#213b5a}
+.support-tags button.active{border-color:#ffd17a;background:#594522}
+.support-count{text-align:right;font-size:11px;color:#a9bdd3;margin-top:4px}
+.support-files{font-size:12px;color:#c5d6e8;line-height:1.5;overflow-wrap:anywhere}
+.support-error{color:#ff9aa6;font-size:12px;min-height:18px}
+@media(max-width:650px){#app>.toolbar{height:66px;bottom:max(4px,env(safe-area-inset-bottom));width:calc(100% - 10px)}.toolbar .profile-fixed{flex-basis:62px;min-width:62px!important}.toolbar-loop>button{flex-basis:72px;min-width:72px!important}.more-wrap{top:8px;right:8px}.scene-help{display:none}.info-hero{min-height:105px}.info-hero i{font-size:62px}}

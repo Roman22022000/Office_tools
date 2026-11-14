@@ -1,0 +1,28 @@
+
+/* MARKET V6: единая типографика, сетка, слои карточек */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700&family=Russo+One&display=swap');
+:root{--market-bg:#08172c;--market-panel:#10274b;--market-cyan:#42c9ff;--market-gold:#ffc044;--market-text:#f7f9ff;--market-font:'Roboto Condensed',Arial,sans-serif;--market-title:'Russo One',Arial,sans-serif}
+.market-dialog{width:min(1320px,96vw);max-height:92vh}
+.market-dialog #modalBody{padding:12px;background:linear-gradient(145deg,#081326,#102749);font-family:var(--market-font)}
+.market-dialog .dialog-head{background:#08172c;font-family:var(--market-title)}
+.market-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.market-search{flex:1;min-width:180px;padding:12px;border:1px solid #6599cf;border-radius:18px;background:#081a35;color:#fff;font:600 17px var(--market-font)}
+.market-wallet{color:#ffd06b;font:20px var(--market-title)}
+.market-tabs{display:flex;gap:7px;overflow-x:auto;padding:0 0 12px;scrollbar-width:thin}
+.market-tab{white-space:nowrap;padding:9px 13px;background:#1a345b;border:1px solid #537fb1;border-radius:14px;font:600 15px var(--market-font)}
+.market-tab.active{background:linear-gradient(#845018,#402610);border-color:#ffd36e;color:#fff}
+.market-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;align-items:stretch}
+.market-card{position:relative;min-width:0;display:flex;flex-direction:column;overflow:hidden;border:2px solid #49b9f5;border-radius:19px;padding:12px;background:linear-gradient(160deg,#102f5c 0%,#101e3d 70%,#162a4b 100%);box-shadow:inset 0 0 0 2px #17375e,0 0 9px #2b9de855;color:var(--market-text)}
+.market-card h3{font:16px/1.2 var(--market-title);min-height:39px;margin:0 30px 4px 0;overflow-wrap:anywhere}
+.market-icon{position:absolute;right:9px;top:9px;border:2px solid #ffcb55;background:#0a1830;border-radius:50%;width:34px;height:34px;display:grid;place-items:center;color:#ffdb81;font-size:20px}
+.market-photo{height:154px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;background:radial-gradient(ellipse at 50% 85%,#f4ae5b44,transparent 65%)}
+.market-photo img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 8px 6px #0008)}
+.market-placeholder{font-size:65px;color:#d4e7ff}
+.market-spec{background:#0c2143a8;border:1px solid #527bad;border-radius:10px;padding:8px;font:600 14px/1.55 var(--market-font);min-height:58px}
+.market-price{margin-top:auto;padding:8px 0 6px;text-align:center;font:22px var(--market-title);color:#fff}
+.market-coin{color:#ffcf4e;text-shadow:0 0 6px #e4a325;margin-right:5px}
+.market-buy{width:100%;padding:9px;border:2px solid #ffeb9b;border-radius:13px;background:linear-gradient(#ffe278,#f5a51c);color:#1e1809;font:19px var(--market-title)}
+.market-buy:hover{background:linear-gradient(#fff0a2,#ffb632)}
+.market-buy:disabled{filter:grayscale(1);opacity:.55}
+.market-foot{margin-top:12px;font:14px var(--market-font);color:#b9d1ed}
+@media(max-width:600px){.market-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.market-card{padding:8px}.market-card h3{font-size:12px;min-height:43px}.market-photo{height:120px}.market-spec{font-size:12px}.market-price{font-size:17px}.market-buy{font-size:15px}}

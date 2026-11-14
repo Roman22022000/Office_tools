@@ -1,0 +1,16 @@
+
+
+/* V10 / three-dot button: precise visual centering */
+.more-button{display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;line-height:1!important}
+.more-button>i{display:flex;align-items:center;justify-content:center;width:26px;height:26px;font-size:25px;line-height:1;margin:0;transform:none}
+/* V10 / menu hero images, floating PNG stickers and profile settings */
+.info-hero.info-hero-art{height:clamp(155px,30vh,240px);min-height:0;position:relative;overflow:hidden;padding:0;background:#0b1d39}
+.info-hero-art>img{width:100%;height:100%;object-fit:cover;display:block}
+.info-hero-art .hero-fallback{position:absolute;inset:0;display:none;place-items:center;font-size:65px}
+.info-hero-art.is-missing .hero-fallback{display:grid}
+.info-hero-art.is-missing>img{display:none}
+.sticker-field{height:100px;position:relative;overflow:hidden;margin:6px 0 12px;isolation:isolate;pointer-events:none}
+.floating-sticker{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);object-fit:contain;opacity:var(--opacity);filter:drop-shadow(0 3px 4px #0007);animation:stickerFloat var(--duration) ease-in-out var(--delay) infinite alternate;will-change:transform}
+@keyframes stickerFloat{from{transform:translate3d(-7px,5px,0) rotate(-9deg)}to{transform:translate3d(8px,-8px,0) rotate(9deg)}}
+@media(prefers-reduced-motion:reduce){.floating-sticker{animation:none!important}}
+.profile-settings{display:grid;gap:10px}.profile-settings section{padding:12px;background:#122943;border:1px solid #3e6388;border-radius:12px}.profile-settings h3{margin:0 0 10px;font-size:15px}.profile-setting-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:13px}.profile-setting-row input[type=range]{width:min(190px,52%);accent-color:#f2bd5c}.profile-setting-row input[type=checkbox]{accent-color:#e7b45e;width:18px;height:18px}.profile-settings .muted{line-height:1.5}

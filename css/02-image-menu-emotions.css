@@ -1,0 +1,55 @@
+
+/* Интегрированное графическое меню, без изменения исходной 3D-сцены */
+#officeImageMenu{position:absolute;left:9px;top:12px;z-index:5;width:116px;padding:4px;border-radius:9px;background:#152538df;border:0;backdrop-filter:blur(7px)}
+#officeImageTiles{display:flex;flex-direction:column;gap:3px}
+.office-image-tile{display:block;width:100%;height:32px;padding:0;border:0;border-radius:5px;overflow:hidden;background:linear-gradient(110deg,#0c3757,#2879b4 35%,#d5e4ef);outline:0;position:relative}
+.office-image-tile img{display:block;width:100%;height:100%;object-fit:fill}
+.office-image-tile span{display:none!important}
+.office-image-tile:hover,.office-image-tile.active{outline:0;filter:brightness(1.13)}
+.image-menu-tools{display:flex;align-items:center;gap:3px;margin-top:6px}.image-menu-tools button{padding:2px 5px;font-size:13px;border-radius:5px}.image-menu-tools label{min-width:0;flex:1}.image-menu-tools input{width:100%;accent-color:#dfb16b}
+.image-info-panel{position:absolute;z-index:6;left:136px;top:12px;width:min(340px,calc(100% - 145px));max-height:75%;overflow:auto;border:0;border-radius:11px;background:#1b2d41f5;box-shadow:none;padding:12px;color:#edf4fc}
+.image-info-panel[hidden]{display:none}.image-info-panel header{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #435b74;padding-bottom:7px}.image-info-panel header button{padding:3px 9px}.image-info-panel p{font-size:13px;line-height:1.55;color:#b7cde0}.image-info-panel .panel-actions{display:flex;gap:6px;flex-wrap:wrap}.image-info-panel .panel-actions button{font-size:12px;padding:7px}
+#integratedLoader{position:fixed;inset:0;z-index:100;background:#111a26 center/cover no-repeat;display:flex;align-items:flex-end;justify-content:center;padding:25px;transition:opacity .45s,visibility .45s}
+#integratedLoader:before{content:'';position:absolute;inset:0;background:linear-gradient(transparent 35%,#08101ce0)}#integratedLoader.finished{opacity:0;visibility:hidden;pointer-events:none}
+.integrated-load-card{position:relative;width:min(740px,100%);padding:20px;border-radius:15px;background:#122034dc;border:0;backdrop-filter:blur(10px)}
+#integratedLoadTitle{font-size:21px;font-weight:700;margin-bottom:13px}.integrated-load-track{height:16px;border:1px solid #60778b;background:#101b2b;border-radius:12px;overflow:hidden}#integratedLoadFill{height:100%;width:0;background:linear-gradient(90deg,#e98a22,#ffcb55);transition:width .2s}.integrated-load-foot{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:12px;color:#b9cce0}
+@media(max-width:650px){#officeImageMenu{width:85px;left:5px;top:7px}.office-image-tile{height:27px}.image-info-panel{left:99px;width:calc(100% - 107px)}.scene-help{left:95px;max-width:calc(100% - 105px)}}
+
+/* Эмоции: экранный размер фиксирован при любом зуме камеры */
+#emotionLayer{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.emotion-bubble{position:absolute;width:48px;height:48px;transform:translate(-50%,-100%);padding:0;border:0;background:transparent;box-shadow:none;cursor:pointer;pointer-events:auto;touch-action:manipulation}
+.emotion-bubble img{display:block;width:100%;height:100%;object-fit:contain;filter:none}
+.emotion-bubble:focus-visible{outline:2px solid #e6b65f;outline-offset:2px}
+@media(max-width:650px){.emotion-bubble{width:40px;height:40px}.toolbar{justify-content:flex-start;gap:3px}.toolbar button{padding:8px 9px;font-size:11px}.topbar{padding:0 8px}.brand small{display:none}}
+
+/* ==============================================================
+   UI / BROWSER RESET — плитки, изображения и игровой холст
+   Убирает синюю подсветку мышью, системное выделение и drag ghost.
+   Для навигации клавиатурой оставлен неброский золотой focus-visible.
+   НЕ применяется к полям ввода и тексту информационных панелей.
+   ============================================================== */
+#officeImageMenu, #officeImageTiles, .office-image-tile,
+.office-image-tile img, #emotionLayer, .emotion-bubble,
+.emotion-bubble img, #scene, .toolbar button {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.office-image-tile, .emotion-bubble, .toolbar button, #scene {
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.office-image-tile:focus:not(:focus-visible),
+.emotion-bubble:focus:not(:focus-visible),
+.toolbar button:focus:not(:focus-visible) { outline: none; box-shadow: none; }
+.office-image-tile:focus-visible, .emotion-bubble:focus-visible,
+.toolbar button:focus-visible { outline: 1px solid #d7a85c; outline-offset: 1px; }
+.office-image-tile img, .emotion-bubble img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+#scene { touch-action: none; }
+

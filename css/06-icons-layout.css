@@ -1,0 +1,15 @@
+
+/* V8 / icons-layout.css — центровка SVG/Tabler в кнопках и модальных окнах */
+.toolbar-loop>button,.toolbar .profile-fixed{display:flex!important;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;line-height:1.15;}
+.toolbar-loop>button>i,.toolbar .profile-fixed>i{display:grid;place-items:center;flex:0 0 25px;width:27px;height:27px;font-size:23px;line-height:1;}
+.toolbar-loop>button>span,.toolbar .profile-fixed>span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.actions .tile{align-items:center;text-align:center;min-width:0;}
+.actions .tile strong,.actions .tile small{width:100%;overflow-wrap:anywhere;}
+.more-dropdown button{justify-content:flex-start;align-items:center;}
+.more-dropdown button i,.hud-actions button i,.build-product>i{display:inline-grid;place-items:center;flex-shrink:0;width:24px;height:24px;line-height:1;}
+.emotion-bubble{width:36px;height:36px;display:grid;place-items:center;line-height:1;transform:translate(-50%,-100%);}
+.emotion-bubble img{width:100%;height:100%;object-fit:contain;}
+/* 3 px между соседними иконками эмоций; JS: EMOTION_ICON_SPACING_PX */
+@media(max-width:700px){.dialog{max-height:calc(100dvh - 20px)}.actions{grid-template-columns:repeat(2,minmax(0,1fr))}.office-image-tile span{font-size:16px}.more-button{width:42px;height:42px}}
+@media(max-width:380px){.actions{grid-template-columns:1fr}.toolbar .profile-fixed{flex-basis:58px;min-width:58px!important}.toolbar-loop>button{flex-basis:64px;min-width:64px!important}.dialog-head h2{font-size:16px}}
+@media(max-height:520px){#officeImageMenu{max-height:calc(100dvh - 90px);overflow:auto}.dialog{max-height:calc(100dvh - 12px)}#app>.toolbar{height:58px}}

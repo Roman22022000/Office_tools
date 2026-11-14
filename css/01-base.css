@@ -1,0 +1,409 @@
+
+
+:root {
+  font-family: Arial, "Segoe UI", sans-serif;
+  color: #eef5fc;
+  background: #101b29;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  color: #edf4fc;
+  background: #273d54;
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 13px;
+}
+
+button:hover {
+  background: #36536e;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.primary {
+  background: #d7a85c;
+  color: #182435;
+  border-color: #edc47d;
+  font-weight: bold;
+}
+
+.primary:hover {
+  background: #e9bd75;
+}
+
+.topbar {
+  height: 60px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #162639;
+  border-bottom: 1px solid #3b526b;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.brand-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: #d9aa61;
+  color: #172437;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.brand small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #91a7bc;
+}
+
+.stats {
+  display: flex;
+  gap: 17px;
+  font-size: 12px;
+  color: #b1c3d4;
+}
+
+#viewport {
+  height: calc(100% - 126px);
+  position: relative;
+  overflow: hidden;
+  background: #b5c6d8;
+}
+
+#scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.scene-help {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  padding: 9px 12px;
+  border-radius: 9px;
+  background: #142437dd;
+  border: 1px solid #45607c;
+  color: #d7e4f0;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.toolbar {
+  height: 66px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  overflow-x: auto;
+  background: #162639;
+  border-top: 1px solid #3b526b;
+}
+
+.toolbar button {
+  white-space: nowrap;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 15px;
+  background: #09131fd9;
+  z-index: 10;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.start-card, .dialog {
+  width: min(560px, 100%);
+  background: #1a2c40;
+  border: 0;
+  border-radius: 15px;
+  box-shadow: none;
+}
+
+.start-card {
+  padding: 30px;
+  text-align: center;
+}
+
+.start-card h1 {
+  margin: 12px 0;
+  font-size: 29px;
+}
+
+.start-card p {
+  color: #b2c5d7;
+  line-height: 1.55;
+}
+
+.eyebrow {
+  color: #e2b66f;
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+
+.model-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.model-status > div {
+  padding: 14px;
+  text-align: left;
+  border-radius: 9px;
+  background: #263d55;
+  border: 1px solid #435d77;
+}
+
+.model-status strong,
+.model-status small {
+  display: block;
+}
+
+.model-status small {
+  margin-top: 6px;
+  color: #9eb4ca;
+  font-size: 11px;
+}
+
+#loadingText {
+  color: #b8cce0;
+  font-size: 12px;
+  margin: 12px 0;
+}
+
+.progress {
+  height: 5px;
+  background: #0e1c2c;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 17px;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0;
+  background: #dfb16b;
+  transition: width .25s;
+}
+
+.wide {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  margin: 9px 0;
+}
+
+.dialog {
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dialog-head {
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #435b74;
+}
+
+.dialog-head h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.dialog-head button {
+  font-size: 22px;
+}
+
+#modalBody {
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.field {
+  margin: 6px 0;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #b2c7da;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 7px;
+  border-radius: 8px;
+  border: 1px solid #506b85;
+  background: #102033;
+  color: white;
+}
+
+.field textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  margin: 8px 0;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 7px;
+  min-height: 54px;
+  padding: 7px;
+  text-align: left;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: white;
+}
+
+.tile strong {
+  font-size: 14px;
+}
+
+.tile small {
+  color: #d0deeb;
+  font-size: 11px;
+}
+
+.tile-blue {
+  --background: #204867;
+  --border: #4b94c6;
+}
+
+.tile-gold {
+  --background: #655032;
+  --border: #e0ad60;
+}
+
+.tile-green {
+  --background: #205347;
+  --border: #48a58d;
+}
+
+.tile-purple {
+  --background: #493960;
+  --border: #a187d2;
+}
+
+.tile-red {
+  --background: #643541;
+  --border: #cb7888;
+}
+
+.tile-slate {
+  --background: #354a5e;
+  --border: #8296aa;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  padding: 7px;
+  border: 1px solid #425c75;
+  border-radius: 9px;
+  background: #263a50;
+}
+
+.item small {
+  display: block;
+  margin-top: 5px;
+  color: #adc1d5;
+}
+
+.muted {
+  font-size: 12px;
+  color: #adbed0;
+}
+
+#toast {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 15px;
+  border-radius: 9px;
+  background: #132439;
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+#toast.show {
+  opacity: 1;
+}
+
+@media (max-width: 700px) {
+  .topbar { height: 54px; }
+  .stats { display: none; }
+  .toolbar { justify-content: flex-start; }
+  #viewport { height: calc(100% - 120px); }
+  .start-card { padding: 20px; }
+  .start-card h1 { font-size: 24px; }
+  .model-status { grid-template-columns: 1fr; }
+  .scene-help { font-size: 10px; }
+}
+

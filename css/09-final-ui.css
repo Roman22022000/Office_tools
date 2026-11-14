@@ -1,0 +1,21 @@
+
+:root{--game-accent:#f5c78d}
+#app button,#app img,#app canvas{-webkit-tap-highlight-color:transparent}
+#app button:focus:not(:focus-visible){outline:none!important}
+#app button:focus-visible{outline:2px solid var(--game-accent);outline-offset:1px}
+#app img{user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+#app .toolbar button,#app .office-image-tile,#app .emotion-bubble{user-select:none;-webkit-user-select:none}
+#app .toolbar button.selected-tool,#app .office-image-tile.active{background:color-mix(in srgb,var(--game-accent) 17%,#17283d)!important;outline:1px solid var(--game-accent)!important;outline-offset:-1px;color:var(--game-accent)!important}
+#app .toolbar button.selected-tool i{color:var(--game-accent)!important}
+#app .ai-menu-button{position:relative;isolation:isolate;overflow:hidden}
+#app .ai-menu-button::before{content:"";position:absolute;inset:1px;z-index:-1;border-radius:inherit;background:linear-gradient(110deg,#4b59ff,#a744d8,#ed6f9c,#35a8ed,#4b59ff);background-size:350% 350%;animation:aiShift 5s linear infinite;opacity:.82}
+#app .ai-menu-button i,#app .ai-menu-button span{color:#fff!important}
+@keyframes aiShift{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+#app .user-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover} #fixedProfile:has(.user-avatar)>i{display:none!important}
+#app .more-dropdown,#app .info-hero,#app .market-card,#app .market-photo img,#app .floating-sticker{box-shadow:none!important;filter:none!important;text-shadow:none!important}
+#app button{box-shadow:none!important;text-shadow:none!important}
+#app .market-card{box-shadow:none!important}
+#app .dialog,#app .start-card,#app .image-info-panel,#app .market-art-card,#app .profile-settings section,#app .tile{box-shadow:none!important}
+#app .toolbar-rail{min-width:0}
+@media(max-width:700px){#app>.toolbar{width:calc(100% - 8px);border-radius:20px}.image-info-panel{max-height:60dvh}#app .toolbar-loop>button{flex-basis:64px;min-width:64px!important}}
+@media(prefers-reduced-motion:reduce){#app .ai-menu-button::before{animation:none}}

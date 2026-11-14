@@ -1,0 +1,34 @@
+
+/* V14 / ui.css — единая центровка, компактные панели, редактор */
+.dialog-head button,#closeModal,#imageInfoClose,.more-button{display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto;line-height:1!important;text-align:center;padding:0!important}
+#closeModal{width:42px;height:42px;font-size:23px}.dialog-head{gap:12px}
+.board-page-bar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}.board-page-bar button{min-width:37px}.board-page-bar span{flex:1;text-align:center;font-weight:700}
+#boardEditor{width:100%;aspect-ratio:8/5;max-height:52dvh;display:block;touch-action:none}
+.board-tools button{min-width:37px;min-height:37px;display:inline-flex;align-items:center;justify-content:center}
+.board-tools button i{display:inline-grid;place-items:center;width:21px;height:21px;line-height:1}
+#modalBody{scrollbar-color:#6389a9 #17283d;scrollbar-width:thin}
+
+/* ==========================================
+   SOSISKA OFFICE V14
+   УСТАНОВКА ИГРОВОГО КУРСОРА
+   ========================================== */
+
+/* Основной курсор во всём интерфейсе */
+html,
+body,
+#app,
+#app * {
+    cursor: url('../kursor/kursor.png') 0 0, auto !important;
+}
+
+/* Курсор ввода текста */
+#app input,
+#app textarea,
+#app [contenteditable="true"] {
+    cursor: text !important;
+}
+
+/* Курсор рисования на доске */
+#boardEditor {
+    cursor: crosshair !important;
+}
