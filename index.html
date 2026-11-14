@@ -1609,7 +1609,7 @@ async function initialize3D() {
 
     progress(40, "Загрузка модели офиса...");
 
-    const office = await loadGLB("./models/office.glb", "office");
+    const office = await loadGLB("./models/office.glb?v=20261114-2", "office");
 
     if (office) {
       officeRoot = office;
